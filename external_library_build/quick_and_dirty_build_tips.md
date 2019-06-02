@@ -3,7 +3,8 @@ More details will be written at a later date!!
 
 Set switch vars in env: `source /opt/devkitpro/switchvars.sh`  
 Apply cpython 2.x patch  
-Configure for cpython 2.x ```
+Configure for cpython 2.x 
+```
 ./configure LDFLAGS="-specs=$DEVKITPRO/libnx/switch.specs $LDFLAGS" CONFIG_SITE="config.site" --host=aarch64-none-elf --build=$(config.guess) --prefix="$PORTLIBS_PREFIX" --disable-ipv6 --disable-shared
 for func in SETGROUPS FCHDIR FDATASYNC SYMLINK CHROOT
 do
@@ -15,18 +16,21 @@ Make sure `Setup.local` in `cpython_config_files` is copied into `Modules` direc
 Contents of `Lib` folder needs to be in `./lib/python2.7`; same directory as NRO  
 Files are needed to copy to correct directories in portlibs directory  
 No patches needed for Pygame_SDL2  
-Generate cython C files for Pygame_SDL2 ```
+Generate cython C files for Pygame_SDL2 
+```
 CC=aarch64-none-elf-gcc LDSHARED=aarch64-none-elf-gcc PYGAME_SDL2_CFLAGS="`sdl2-config --cflags`" PYGAME_SDL2_LDFLAGS="`sdl2-config --libs` -lpython2.7 -lz -specs=$DEVKITPRO/libnx/switch.specs -lm" PYGAME_SDL2_STATIC=1 python setup.py build_ext --include-dirs $PORTLIBS_PREFIX/include/python2.7 build install -O2 --prefix $PORTLIBS_PREFIX
 ```  
 Apply Ren'Py patch
-Generate cython C files for Ren'Py modules ```
+Generate cython C files for Ren'Py modules 
+```
 CC=aarch64-none-elf-gcc LDSHARED=aarch64-none-elf-gcc RENPY_DEPS_INSTALL=$PORTLIBS_PREFIX CFLAGS="-I$PORTLIBS_PREFIX/include `sdl2-config --cflags`" LDFLAGS="-L$PORTLIBS_PREFIX/lib `sdl2-config --libs`" RENPY_STATIC=1 python setup.py build_ext --include-dirs $PORTLIBS_PREFIX/include/python2.7 build install -O2 --prefix $PORTLIBS_PREFIX
 ```  
 Contents of `renpy` folder needs to be in `./renpy`; same directory as NRO 
 `renpy.py` needs to be in `./renpy.py`; same directory as NRO  
 `game` folder (you can use the_question or tutorial as a test) needs to be in `./game`; same directory as NRO  
 
-Copy files like this: ```
+Copy files like this: 
+```
 include/IMG_savepng.h
 include/SDL_gfxPrimitives.h
 include/arabic-misc.tab.i
