@@ -51,17 +51,32 @@ PyMODINIT_FUNC initrenpy_text_textsupport();
 PyMODINIT_FUNC initrenpy_text_texwrap();
 PyMODINIT_FUNC initrenpy_text_ftfont();
 
+void userShowMessage(const char* message)
+{
+    consoleInit(NULL);
+    fprintf(stderr, "%s\n", message);
+    consoleUpdate(NULL);
+
+    while (appletMainLoop())
+    {
+        hidScanInput();
+
+        if (hidKeysDown(CONTROLLER_P1_AUTO) & KEY_PLUS)
+        {
+            break;
+        }
+    }
+
+    consoleExit(NULL);
+}
+
 int main(int argc, char* argv[])
 {
     Py_NoSiteFlag = 1;
     Py_IgnoreEnvironmentFlag = 1;
     Py_NoUserSiteDirectory = 1;
 
-    // Look for python libraries in ./lib/python2.7/
-    Py_SetPythonHome("./");
-
     static struct _inittab builtins[] = {
-
         {"pygame_sdl2.event", initpygame_sdl2_event},
         {"pygame_sdl2.error", initpygame_sdl2_error},
         {"pygame_sdl2.color", initpygame_sdl2_color},
@@ -115,30 +130,68 @@ int main(int argc, char* argv[])
         {NULL, NULL}
     };
 
+    Result romfs_result = romfsInit();
+
+    FILE* sysconfigdata_file = fopen("romfs:/lib/python2.7/_sysconfigdata.py", "rb");
+    if (sysconfigdata_file == NULL)
+    {
+        sysconfigdata_file = fopen("./lib/python2.7/_sysconfigdata.py", "rb");
+        if (sysconfigdata_file == NULL)
+        {
+            userShowMessage("Can not find lib/python2.7/_sysconfigdata.py in the same directory as this executable; press + to return.");
+            return 1;
+        }
+        else
+        {
+            fclose(sysconfigdata_file);
+            Py_SetPythonHome("./");
+        }
+    }
+    else
+    {
+        fclose(sysconfigdata_file);
+        Py_SetPythonHome("romfs:/");
+    }
+
     Py_InitializeEx(0);
 
     PyImport_ExtendInittab(builtins);
 
     PySys_SetArgv(argc, argv);
+    int python_result;
 
-    FILE* f = fopen("./renpy.py", "rb");
-    if (f == NULL) {
-        consoleInit(NULL);
-        PyRun_SimpleString("print 'Can't find ./renpy.py; hit + to exit.' ");
-        consoleUpdate(NULL);
-
-        while (appletMainLoop()) {
-            hidScanInput();
-
-            if (hidKeysDown(CONTROLLER_P1_AUTO) & KEY_PLUS)
-                break;
+    FILE* renpy_file = fopen("romfs:/renpy.py", "rb");
+    if (renpy_file == NULL)
+    {
+        renpy_file = fopen("./renpy.py", "rb");
+        if (renpy_file == NULL)
+        {
+            Py_Finalize();
+            userShowMessage("Can not find renpy.py in the same directory as this executable; press + to return.");
+            return 1;
         }
-
-        consoleExit(NULL);
-        return 0;
+        else
+        {
+            python_result = PyRun_SimpleFileEx(renpy_file, "./renpy.py", 1);
+        }
+    }
+    else
+    {
+        python_result = PyRun_SimpleFileEx(renpy_file, "romfs:/renpy.py", 1);
     }
 
-    PyRun_SimpleFileEx(f, "./main.py", 1);
+    if (python_result == -1)
+    {
+        Py_Finalize();
+        userShowMessage("A Python exception has occurred; check log.txt for more details; press + to return.");
+        return 1;
+    }
 
+    if (!R_FAILED(romfs_result))
+    {
+        romfsExit();
+    }
+
+    Py_Finalize();
     return 0;
 }
