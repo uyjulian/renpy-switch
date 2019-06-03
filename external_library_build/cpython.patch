@@ -1,3 +1,25 @@
+diff --git a/Lib/posixpath.py b/Lib/posixpath.py
+index bbc2369ce7..5ecde1b4c4 100644
+--- a/Lib/posixpath.py
++++ b/Lib/posixpath.py
+@@ -51,7 +51,7 @@ def normcase(s):
+ 
+ def isabs(s):
+     """Test whether a path is absolute"""
+-    return s.startswith('/')
++    return s.startswith('/') or s.startswith('sdmc:') or s.startswith('romfs:') or s.startswith('nxlink:')
+ 
+ 
+ # Join pathnames.
+@@ -65,7 +65,7 @@ def join(a, *p):
+     ends with a separator."""
+     path = a
+     for b in p:
+-        if b.startswith('/'):
++        if b.startswith('/') or s.startswith('sdmc:') or s.startswith('romfs:') or s.startswith('nxlink:'):
+             path = b
+         elif path == '' or path.endswith('/'):
+             path +=  b
 diff --git a/Modules/Setup.dist b/Modules/Setup.dist
 index bbc9222129..43f3ff45e7 100644
 --- a/Modules/Setup.dist
