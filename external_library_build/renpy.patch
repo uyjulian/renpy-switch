@@ -109,3 +109,18 @@ index 4b3898740..86102975c 100644
      else:
          import emscripten
          emscripten.async_call(autosave_thread, take_screenshot, -1)
+diff --git a/renpy/persistent.py b/renpy/persistent.py
+index 244a0ba80..f966b4d22 100644
+--- a/renpy/persistent.py
++++ b/renpy/persistent.py
+@@ -468,6 +468,10 @@ def MultiPersistent(name):
+     elif renpy.macintosh:
+         files = [ os.path.expanduser("~/.renpy/persistent"),
+                   os.path.expanduser("~/Library/RenPy/persistent") ]
++
++    elif renpy.switch:
++        files = [ "sdmc:/Ren'Py Data/persistent" ]
++
+     else:
+         files = [ os.path.expanduser("~/.renpy/persistent") ]
+ 
