@@ -236,3 +236,8 @@ xml/etree/ElementTree.py
 xml/etree/__init__.py
 zipfile.py
 ```
+The following files from `pystub` are required to be copied to the Python standard library directory (replacing files) for Ren'Py to operate correctly:
+```
+subprocess.py
+threading.py
+```
