@@ -11,21 +11,8 @@ index d5b6d310f..80c37ae59 100644
  
  #endif
  
-diff --git a/renpy.py b/renpy.py
-index 0c7e53012..86c82ca64 100644
---- a/renpy.py
-+++ b/renpy.py
-@@ -169,7 +169,7 @@ if android:
- 
- def main():
- 
--    renpy_base = path_to_renpy_base()
-+    renpy_base = "."
- 
-     # Add paths.
-     if os.path.exists(renpy_base + "/module"):
 diff --git a/renpy/__init__.py b/renpy/__init__.py
-index d33dc6b59..9b1632818 100644
+index d33dc6b59..3e37d3c0b 100644
 --- a/renpy/__init__.py
 +++ b/renpy/__init__.py
 @@ -72,6 +72,7 @@ linux = False
@@ -50,278 +37,19 @@ index d33dc6b59..9b1632818 100644
  
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
-@@ -537,8 +539,8 @@ def post_import():
-     renpy.exports.store = renpy.store
-     sys.modules['renpy.store'] = sys.modules['store']
- 
--    import subprocess
--    sys.modules['renpy.subprocess'] = subprocess
-+    # import subprocess
-+    # sys.modules['renpy.subprocess'] = subprocess
- 
-     for k, v in renpy.defaultstore.__dict__.iteritems():
-         renpy.store.__dict__.setdefault(k, v)
-diff --git a/renpy/audio/audio.py b/renpy/audio/audio.py
-index 47de6d1c8..292c61fa1 100644
---- a/renpy/audio/audio.py
-+++ b/renpy/audio/audio.py
-@@ -844,9 +844,9 @@ def init():
- 
-         periodic_thread_quit = False
- 
--        periodic_thread = threading.Thread(target=periodic_thread_main)
--        periodic_thread.daemon = True
--        periodic_thread.start()
-+        # periodic_thread = threading.Thread(target=periodic_thread_main)
-+        # periodic_thread.daemon = True
-+        # periodic_thread.start()
- 
- 
- def quit():  # @ReservedAssignment
-diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
-index 328a5b5be..7e4971039 100644
---- a/renpy/bootstrap.py
-+++ b/renpy/bootstrap.py
-@@ -22,7 +22,7 @@
- from __future__ import print_function
- import os.path
- import sys
--import subprocess
-+# import subprocess
- import io
- 
- FSENCODING = sys.getfilesystemencoding() or "utf-8"
-@@ -207,6 +207,8 @@ def bootstrap(renpy_base):
-     else:
-         basedir = renpy_base
- 
-+    basedir = "."
-+
-     if not os.path.exists(basedir):
-         sys.stderr.write("Base directory %r does not exist. Giving up.\n" % (basedir,))
-         sys.exit(1)
-@@ -223,16 +225,17 @@ def bootstrap(renpy_base):
- 
-     gamedirs.extend([ 'game', 'data', 'launcher/game' ])
- 
--    for i in gamedirs:
-+    # for i in gamedirs:
- 
--        if i == "renpy":
--            continue
-+    #     if i == "renpy":
-+    #         continue
- 
--        gamedir = basedir + "/" + i
--        if os.path.isdir(gamedir):
--            break
--    else:
--        gamedir = basedir
-+    #     gamedir = basedir + "/" + i
-+    #     if os.path.isdir(gamedir):
-+    #         break
-+    # else:
-+    #     gamedir = basedir
-+    gamedir = 'game'
- 
-     sys.path.insert(0, basedir)
- 
-@@ -328,11 +331,11 @@ You may be using a system install of python. Please run {0}.sh,
-             except renpy.game.QuitException as e:
-                 exit_status = e.status
- 
--                if e.relaunch:
--                    if hasattr(sys, "renpy_executable"):
--                        subprocess.Popen([sys.renpy_executable] + sys.argv[1:])
--                    else:
--                        subprocess.Popen([sys.executable, "-EO"] + sys.argv)
-+                # if e.relaunch:
-+                #     if hasattr(sys, "renpy_executable"):
-+                #         subprocess.Popen([sys.renpy_executable] + sys.argv[1:])
-+                #     else:
-+                #         subprocess.Popen([sys.executable, "-EO"] + sys.argv)
- 
-             except renpy.game.ParseErrorException:
-                 pass
-@@ -357,5 +360,5 @@ You may be using a system install of python. Please run {0}.sh,
- 
-         # Prevent subprocess from throwing errors while trying to run it's
-         # __del__ method during shutdown.
--        if not renpy.emscripten:
--            subprocess.Popen.__del__ = popen_del
-+        # if not renpy.emscripten:
-+        #     subprocess.Popen.__del__ = popen_del
-diff --git a/renpy/common/00updater.rpy b/renpy/common/00updater.rpy
-index 2cc750962..bad29cb32 100644
---- a/renpy/common/00updater.rpy
-+++ b/renpy/common/00updater.rpy
-@@ -30,7 +30,7 @@ init -1500 python in updater:
-     import os
-     import urlparse
-     import json
--    import subprocess
-+    # import subprocess
-     import hashlib
-     import time
-     import sys
-@@ -916,22 +916,22 @@ init -1500 python in updater:
-             self.log.write("running %r\n" % cmd)
-             self.log.flush()
- 
--            if renpy.windows:
--
--                CREATE_NO_WINDOW=0x08000000
--                p = subprocess.Popen(cmd,
--                    stdin=subprocess.PIPE,
--                    stdout=self.log,
--                    stderr=self.log,
--                    creationflags=CREATE_NO_WINDOW,
--                    cwd=renpy.fsencode(self.updatedir))
--            else:
--
--                p = subprocess.Popen(cmd,
--                    stdin=subprocess.PIPE,
--                    stdout=self.log,
--                    stderr=self.log,
--                    cwd=renpy.fsencode(self.updatedir))
-+            # if renpy.windows:
-+
-+            #     CREATE_NO_WINDOW=0x08000000
-+            #     p = subprocess.Popen(cmd,
-+            #         stdin=subprocess.PIPE,
-+            #         stdout=self.log,
-+            #         stderr=self.log,
-+            #         creationflags=CREATE_NO_WINDOW,
-+            #         cwd=renpy.fsencode(self.updatedir))
-+            # else:
-+
-+            #     p = subprocess.Popen(cmd,
-+            #         stdin=subprocess.PIPE,
-+            #         stdout=self.log,
-+            #         stderr=self.log,
-+            #         cwd=renpy.fsencode(self.updatedir))
- 
-             p.stdin.close()
- 
 diff --git a/renpy/config.py b/renpy/config.py
-index 65338a1e2..9701977c3 100644
+index 65338a1e2..6eef70c0d 100644
 --- a/renpy/config.py
 +++ b/renpy/config.py
-@@ -818,7 +818,7 @@ keep_show_layer_state = True
- fast_skipping_callbacks = [ ]
+@@ -819,7 +819,7 @@ fast_skipping_callbacks = [ ]
  
  # Should the audio periodic callback run in its own thread.
--audio_periodic_thread = True
-+audio_periodic_thread = False
- if renpy.emscripten:
+ audio_periodic_thread = True
+-if renpy.emscripten:
++if renpy.emscripten or renpy.switch:
      audio_periodic_thread = False
  
-diff --git a/renpy/display/tts.py b/renpy/display/tts.py
-index 5364c861a..8d5790da5 100644
---- a/renpy/display/tts.py
-+++ b/renpy/display/tts.py
-@@ -24,7 +24,7 @@ from __future__ import print_function
- import sys
- import os
- import renpy.audio
--import subprocess
-+# import subprocess
- import pygame
- 
- 
-@@ -95,34 +95,34 @@ def default_tts_function(s):
- 
-     fsencode = renpy.exports.fsencode
- 
--    if "RENPY_TTS_COMMAND" in os.environ:
-+    # if "RENPY_TTS_COMMAND" in os.environ:
- 
--        process = subprocess.Popen([ os.environ["RENPY_TTS_COMMAND"], fsencode(s) ])
-+    #     process = subprocess.Popen([ os.environ["RENPY_TTS_COMMAND"], fsencode(s) ])
- 
--    elif renpy.linux:
-+    # elif renpy.linux:
- 
--        if renpy.config.tts_voice is None:
--            process = subprocess.Popen([ "espeak", fsencode(s) ])
--        else:
--            process = subprocess.Popen([ "espeak", "-v", fsencode(renpy.config.tts_voice), fsencode(s) ])
-+    #     if renpy.config.tts_voice is None:
-+    #         process = subprocess.Popen([ "espeak", fsencode(s) ])
-+    #     else:
-+    #         process = subprocess.Popen([ "espeak", "-v", fsencode(renpy.config.tts_voice), fsencode(s) ])
- 
--    elif renpy.macintosh:
-+    # elif renpy.macintosh:
- 
--        if renpy.config.tts_voice is None:
--            process = subprocess.Popen([ "say", fsencode(s) ])
--        else:
--            process = subprocess.Popen([ "say", "-v", fsencode(renpy.config.tts_voice), fsencode(s) ])
-+    #     if renpy.config.tts_voice is None:
-+    #         process = subprocess.Popen([ "say", fsencode(s) ])
-+    #     else:
-+    #         process = subprocess.Popen([ "say", "-v", fsencode(renpy.config.tts_voice), fsencode(s) ])
- 
--    elif renpy.windows:
-+    # elif renpy.windows:
- 
--        if renpy.config.tts_voice is None:
--            voice = "default voice"  # something that is unlikely to match.
--        else:
--            voice = renpy.config.tts_voice
-+    #     if renpy.config.tts_voice is None:
-+    #         voice = "default voice"  # something that is unlikely to match.
-+    #     else:
-+    #         voice = renpy.config.tts_voice
- 
--        say_vbs = os.path.join(os.path.dirname(sys.executable), "say.vbs")
--        s = s.replace('"', "")
--        process = subprocess.Popen([ "wscript", fsencode(say_vbs), fsencode(s), fsencode(voice) ])
-+    #     say_vbs = os.path.join(os.path.dirname(sys.executable), "say.vbs")
-+    #     s = s.replace('"', "")
-+    #     process = subprocess.Popen([ "wscript", fsencode(say_vbs), fsencode(s), fsencode(voice) ])
- 
- 
- def tts(s):
-diff --git a/renpy/editor.py b/renpy/editor.py
-index ed20f9f5c..ccd3e7320 100644
---- a/renpy/editor.py
-+++ b/renpy/editor.py
-@@ -24,7 +24,7 @@ from __future__ import print_function
- import os
- import renpy
- import traceback
--import subprocess
-+# import subprocess
- 
- 
- class Editor(object):
-@@ -94,15 +94,15 @@ class SystemEditor(Editor):
- 
-         filename = renpy.exports.fsencode(filename)
- 
--        try:
--            if renpy.windows:
--                os.startfile(filename)  # @UndefinedVariable
--            elif renpy.macintosh:
--                subprocess.call([ "open", filename ])  # @UndefinedVariable
--            elif renpy.linux:
--                subprocess.call([ "xdg-open", filename ])  # @UndefinedVariable
--        except:
--            traceback.print_exc()
-+        # try:
-+        #     if renpy.windows:
-+        #         os.startfile(filename)  # @UndefinedVariable
-+        #     elif renpy.macintosh:
-+        #         subprocess.call([ "open", filename ])  # @UndefinedVariable
-+        #     elif renpy.linux:
-+        #         subprocess.call([ "xdg-open", filename ])  # @UndefinedVariable
-+        # except:
-+        #     traceback.print_exc()
- 
- 
- # The editor that Ren'Py is using. It should be a subclass of the Editor
+ # A list of fonts to preload on Ren'Py startup.
 diff --git a/renpy/gl/gldraw.pyx b/renpy/gl/gldraw.pyx
 index 4e598e38d..c39345e67 100644
 --- a/renpy/gl/gldraw.pyx
@@ -355,88 +83,15 @@ index 4e598e38d..c39345e67 100644
                  "RENPY_GL_RTT",
                  "fbo",
 diff --git a/renpy/loadsave.py b/renpy/loadsave.py
-index 4b3898740..bc24d1a17 100644
+index 4b3898740..86102975c 100644
 --- a/renpy/loadsave.py
 +++ b/renpy/loadsave.py
-@@ -554,13 +554,15 @@ def force_autosave(take_screenshot=False, block=False):
- 
-     autosave_not_running.clear()
- 
--    if not renpy.emscripten:
--        t = threading.Thread(target=autosave_thread, args=(take_screenshot,))
--        t.daemon = True
--        t.start()
--    else:
--        import emscripten
--        emscripten.async_call(autosave_thread, take_screenshot, -1)
-+    autosave_thread(take_screenshot)
-+
-+    # if not renpy.emscripten:
-+    #     t = threading.Thread(target=autosave_thread, args=(take_screenshot,))
-+    #     t.daemon = True
-+    #     t.start()
-+    # else:
-+    #     import emscripten
-+    #     emscripten.async_call(autosave_thread, take_screenshot, -1)
- 
- 
- ################################################################################
-diff --git a/renpy/log.py b/renpy/log.py
-index 3f730ccd1..f7ffea918 100644
---- a/renpy/log.py
-+++ b/renpy/log.py
-@@ -102,7 +102,7 @@ class LogFile(object):
- 
-             fn = os.path.join(base, self.name + ".txt")
- 
--            altfn = os.path.join(tempfile.gettempdir(), "renpy-" + self.name + ".txt")
-+            #altfn = os.path.join(tempfile.gettempdir(), "renpy-" + self.name + ".txt")
- 
-             if self.append:
-                 mode = "a"
-diff --git a/renpy/main.py b/renpy/main.py
-index f503c5b4a..9bf4fafdc 100644
---- a/renpy/main.py
-+++ b/renpy/main.py
-@@ -265,11 +265,15 @@ def main():
-     # Find the common directory.
-     commondir = __main__.path_to_common(renpy.config.renpy_base)  # E1101 @UndefinedVariable
- 
--    if os.path.isdir(commondir):
--        renpy.config.searchpath.append(commondir)
--        renpy.config.commondir = commondir
--    else:
--        renpy.config.commondir = None
-+    commondir = "renpy/common"
-+
-+    # if os.path.isdir(commondir):
-+    renpy.config.gamedir = "game"
-+    renpy.config.searchpath.append("game")
-+    renpy.config.searchpath.append(commondir)
-+    renpy.config.commondir = commondir
-+    # else:
-+        # renpy.config.commondir = None
- 
-     # Add path from env variable, if any
-     if "RENPY_SEARCHPATH" in os.environ:
-diff --git a/renpy/savelocation.py b/renpy/savelocation.py
-index 0a5d28fa3..6a1a55d40 100644
---- a/renpy/savelocation.py
-+++ b/renpy/savelocation.py
-@@ -545,7 +545,7 @@ def quit():  # @ReservedAssignment
-         quit_scan_thread = True
-         scan_thread_condition.notifyAll()
- 
--    scan_thread.join()
-+    # scan_thread.join()
- 
- 
- def init():
-@@ -566,5 +566,5 @@ def init():
- 
-     renpy.loadsave.location = location
- 
--    scan_thread = threading.Thread(target=run_scan_thread)
--    scan_thread.start()
-+    # scan_thread = threading.Thread(target=run_scan_thread)
-+    # scan_thread.start()
+@@ -558,6 +558,8 @@ def force_autosave(take_screenshot=False, block=False):
+         t = threading.Thread(target=autosave_thread, args=(take_screenshot,))
+         t.daemon = True
+         t.start()
++    elif renpy.switch:
++        autosave_thread(take_screenshot)
+     else:
+         import emscripten
+         emscripten.async_call(autosave_thread, take_screenshot, -1)
