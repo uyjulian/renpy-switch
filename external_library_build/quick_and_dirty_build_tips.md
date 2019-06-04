@@ -154,7 +154,7 @@ source/ttgsubtable.c
 source/write_jpeg.c
 source/write_png.c
 ```  
-These are the minimum Python standard libraries required for Ren'Py to operate correctly:
+These are the minimum Python and pygame_sdl2 libraries required for Ren'Py to operate correctly:
 ```
 StringIO.py
 UserDict.py
@@ -206,6 +206,17 @@ os.py
 pickle.py
 platform.py
 posixpath.py
+pygame_sdl2/time.py
+pygame_sdl2/sysfont.py
+pygame_sdl2/version.py
+pygame_sdl2/compat.py
+pygame_sdl2/DejaVuSans.ttf
+pygame_sdl2/__init__.py
+pygame_sdl2/sprite.py
+pygame_sdl2/threads
+pygame_sdl2/threads/Py25Queue.py
+pygame_sdl2/threads/__init__.py
+pygame_sdl2/DejaVuSans.txt
 random.py
 re.py
 repr.py
