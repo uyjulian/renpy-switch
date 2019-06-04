@@ -51,6 +51,17 @@ index d33dc6b59..3e37d3c0b 100644
  
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
+diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
+index 328a5b5be..3c9b0f531 100644
+--- a/renpy/bootstrap.py
++++ b/renpy/bootstrap.py
+@@ -357,5 +357,5 @@ You may be using a system install of python. Please run {0}.sh,
+ 
+         # Prevent subprocess from throwing errors while trying to run it's
+         # __del__ method during shutdown.
+-        if not renpy.emscripten:
++        if not (renpy.emscripten or renpy.switch):
+             subprocess.Popen.__del__ = popen_del
 diff --git a/renpy/config.py b/renpy/config.py
 index 65338a1e2..6eef70c0d 100644
 --- a/renpy/config.py

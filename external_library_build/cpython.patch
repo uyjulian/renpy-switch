@@ -1,5 +1,5 @@
 diff --git a/Lib/posixpath.py b/Lib/posixpath.py
-index bbc2369ce7..5ecde1b4c4 100644
+index bbc2369ce7..bd592d06a2 100644
 --- a/Lib/posixpath.py
 +++ b/Lib/posixpath.py
 @@ -51,7 +51,7 @@ def normcase(s):
@@ -20,6 +20,57 @@ index bbc2369ce7..5ecde1b4c4 100644
              path = b
          elif path == '' or path.endswith('/'):
              path +=  b
+@@ -277,7 +277,7 @@ def expanduser(path):
+             return path
+         userhome = pwent.pw_dir
+     userhome = userhome.rstrip('/')
+-    return (userhome + path[i:]) or '/'
++    return (userhome + path[i:]) or 'sdmc:/'
+ 
+ 
+ # Expand paths containing shell variable substitutions.
+@@ -340,11 +340,6 @@ def normpath(path):
+     if path == '':
+         return dot
+     initial_slashes = path.startswith('/')
+-    # POSIX allows one or two initial slashes, but treats three or more
+-    # as single slash.
+-    if (initial_slashes and
+-        path.startswith('//') and not path.startswith('///')):
+-        initial_slashes = 2
+     comps = path.split('/')
+     new_comps = []
+     for comp in comps:
+@@ -358,7 +353,7 @@ def normpath(path):
+     comps = new_comps
+     path = slash.join(comps)
+     if initial_slashes:
+-        path = slash*initial_slashes + path
++        path = 'sdmc:/' + path
+     return path or dot
+ 
+ 
+@@ -386,8 +381,18 @@ symbolic links encountered in the path."""
+ # encountered in the second path.
+ def _joinrealpath(path, rest, seen):
+     if isabs(rest):
+-        rest = rest[1:]
+-        path = sep
++        if rest.startswith('sdmc:/'):
++            rest = rest[6:]
++            path = 'sdmc:/'
++        elif rest.startswith('romfs:/'):
++            rest = rest[7:]
++            path = 'romfs:/'
++        elif rest.startswith('nxlink:/'):
++            rest = rest[8:]
++            path = 'nxlink:/'
++        else:
++            rest = rest[1:]
++            path = sep
+ 
+     while rest:
+         name, _, rest = rest.partition(sep)
 diff --git a/Modules/Setup.dist b/Modules/Setup.dist
 index bbc9222129..43f3ff45e7 100644
 --- a/Modules/Setup.dist

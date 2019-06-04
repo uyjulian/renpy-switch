@@ -43,7 +43,19 @@ class Thread(object):
         return False
 
 
+class _MainThread(Thread):
+
+    def __init__(self): pass
+
+    def _set_daemon(self):
+        return False
+
+    def _exitfunc(self): pass
+
+
 _current_thread = Thread()
+
+_shutdown = _MainThread()._exitfunc
 
 
 def current_thread():
