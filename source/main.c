@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
     if (python_result == -1)
     {
         Py_Finalize();
-        userShowMessage("A Python exception has occurred; check log.txt for more details; press + to return.");
+        userShowMessage("A Python exception has occurred; check sdmc:/Ren'Py Logs/log.txt for more details; press + to return.");
         return 1;
     }
 
