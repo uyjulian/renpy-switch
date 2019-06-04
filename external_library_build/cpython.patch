@@ -16,7 +16,7 @@ index bbc2369ce7..5ecde1b4c4 100644
      path = a
      for b in p:
 -        if b.startswith('/'):
-+        if b.startswith('/') or s.startswith('sdmc:') or s.startswith('romfs:') or s.startswith('nxlink:'):
++        if b.startswith('/') or b.startswith('sdmc:') or b.startswith('romfs:') or b.startswith('nxlink:'):
              path = b
          elif path == '' or path.endswith('/'):
              path +=  b
