@@ -11,6 +11,20 @@ index d5b6d310f..80c37ae59 100644
  
  #endif
  
+diff --git a/renpy.py b/renpy.py
+index 0c7e53012..92dd67f70 100644
+--- a/renpy.py
++++ b/renpy.py
+@@ -131,6 +131,9 @@ def path_to_saves(gamedir, save_directory=None):
+             rv = "~/RenPy/" + renpy.config.save_directory
+             return os.path.expanduser(rv)
+ 
++    elif renpy.switch:
++        return "sdmc:/Ren'Py Data/" + save_directory
++
+     else:
+         rv = "~/.renpy/" + save_directory
+         return os.path.expanduser(rv)
 diff --git a/renpy/__init__.py b/renpy/__init__.py
 index d33dc6b59..3e37d3c0b 100644
 --- a/renpy/__init__.py
