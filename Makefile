@@ -37,12 +37,17 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   of a homebrew executable (.nro). This is intended to be used for sysmodules.
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
-BUILD		:=	build
-SOURCES		:=	source
-DATA		:=	data
-INCLUDES	:=	include include/fribidi-src/lib
-#ROMFS	:=	romfs
+TARGET      := $(notdir $(CURDIR))
+BUILD       := build
+SOURCES     := source
+DATA        := data
+INCLUDES    := include include/fribidi-src/lib
+ROMFS       := romfs
+
+APP_TITLE   := Ren'Py
+APP_AUTHOR  := renpytom
+APP_VERSION := 7.3.0 prerelease
+APP_TITLEID := 52656E2750794E58
 
 #---------------------------------------------------------------------------------
 # options for code generation

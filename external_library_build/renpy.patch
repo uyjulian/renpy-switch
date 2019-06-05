@@ -12,10 +12,22 @@ index d5b6d310f..80c37ae59 100644
  #endif
  
 diff --git a/renpy.py b/renpy.py
-index 0c7e53012..92dd67f70 100644
+index 0c7e53012..33a5eeee8 100644
 --- a/renpy.py
 +++ b/renpy.py
-@@ -131,6 +131,9 @@ def path_to_saves(gamedir, save_directory=None):
+@@ -37,7 +37,10 @@ import warnings
+ 
+ 
+ def path_to_common(renpy_base):
+-    return renpy_base + "/renpy/common"
++    if os.path.exists("romfs:/Contents/renpy/common"):
++        return "romfs:/Contents/renpy/common"
++    else:
++        return renpy_base + "/renpy/common"
+ 
+ # Given a directory holding a Ren'Py game, this is expected to return
+ # the path to a directory that will hold save files.
+@@ -131,6 +134,9 @@ def path_to_saves(gamedir, save_directory=None):
              rv = "~/RenPy/" + renpy.config.save_directory
              return os.path.expanduser(rv)
  
@@ -52,10 +64,22 @@ index d33dc6b59..3e37d3c0b 100644
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
 diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
-index 328a5b5be..5dee1db81 100644
+index 328a5b5be..1df01a039 100644
 --- a/renpy/bootstrap.py
 +++ b/renpy/bootstrap.py
-@@ -305,6 +305,8 @@ You may be using a system install of python. Please run {0}.sh,
+@@ -232,7 +232,10 @@ def bootstrap(renpy_base):
+         if os.path.isdir(gamedir):
+             break
+     else:
+-        gamedir = basedir
++        if os.path.exists("romfs:/Contents/game"):
++            gamedir = "romfs:/Contents/game"
++        else:
++            gamedir = basedir
+ 
+     sys.path.insert(0, basedir)
+ 
+@@ -305,6 +308,8 @@ You may be using a system install of python. Please run {0}.sh,
  
                  if renpy.android:
                      renpy.config.logdir = os.environ['ANDROID_PUBLIC']
@@ -64,7 +88,7 @@ index 328a5b5be..5dee1db81 100644
                  else:
                      renpy.config.logdir = basedir
  
-@@ -357,5 +359,5 @@ You may be using a system install of python. Please run {0}.sh,
+@@ -357,5 +362,5 @@ You may be using a system install of python. Please run {0}.sh,
  
          # Prevent subprocess from throwing errors while trying to run it's
          # __del__ method during shutdown.
