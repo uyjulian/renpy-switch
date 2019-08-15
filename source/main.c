@@ -1,6 +1,8 @@
 #include <switch.h>
 #include <Python.h>
 
+u32 __nx_applet_exit_mode = 1;
+
 PyMODINIT_FUNC initpygame_sdl2_color();
 PyMODINIT_FUNC initpygame_sdl2_controller();
 PyMODINIT_FUNC initpygame_sdl2_display();
@@ -70,8 +72,17 @@ void userShowMessage(const char* message)
     consoleExit(NULL);
 }
 
+void cleanup() {
+    romfsExit();
+    socketExit();
+}
+
 int main(int argc, char* argv[])
 {
+    romfsInit();
+    socketInitializeDefault();
+    nxlinkStdio();
+
     Py_NoSiteFlag = 1;
     Py_IgnoreEnvironmentFlag = 1;
     Py_NoUserSiteDirectory = 1;
@@ -130,13 +141,7 @@ int main(int argc, char* argv[])
         {NULL, NULL}
     };
 
-    Result romfs_result = romfsInit();
-
-    socketInitializeDefault();
-
-    nxlinkStdio();
-
-    FILE* sysconfigdata_file = fopen("romfs:/Contents/lib/python2.7/_sysconfigdata.py", "rb");
+    FILE* sysconfigdata_file = fopen("romfs:/lib/python2.7/_sysconfigdata.py", "rb");
     if (sysconfigdata_file == NULL)
     {
         sysconfigdata_file = fopen("./lib/python2.7/_sysconfigdata.py", "rb");
@@ -146,7 +151,7 @@ int main(int argc, char* argv[])
                 "The lib/python2.7/_sysconfigdata.py file is not located in the same directory as this executable.\n"
                 "Press + to return.\n"
             );
-            return 1;
+            Py_Exit(1);
         }
         else
         {
@@ -156,11 +161,12 @@ int main(int argc, char* argv[])
     }
     else
     {
-        Py_SetPythonHome("romfs:/Contents/lib/python2.7");
+        Py_SetPythonHome("romfs:/lib/python2.7");
         fclose(sysconfigdata_file);
     }
 
     Py_InitializeEx(0);
+    Py_AtExit(cleanup);
 
     PyImport_ExtendInittab(builtins);
 
@@ -173,7 +179,7 @@ int main(int argc, char* argv[])
 
         "del sys.path[:]\n"
 
-        "pathdirs = ['romfs:/Contents/lib/python2.7', 'romfs:/Contents', './lib/python2.7', '.']\n"
+        "pathdirs = ['romfs:/lib/python2.7', 'romfs:/', './lib/python2.7', '.']\n"
 
         "for i in pathdirs:\n"
         "\tsys.path.append(i)\n"
@@ -195,27 +201,25 @@ int main(int argc, char* argv[])
 
     if (python_result == -1)
     {
-        Py_Finalize();
         userShowMessage(
             "An error occurred while initializing the Python engine.\n"
             "Please verify that the lib/python2.7 folder in the same directory as this executable contains the correct files.\n"
             "Press + to return.\n"
         );
-        return 1;
+        Py_Exit(1);
     }
 
-    FILE* renpy_file = fopen("romfs:/Contents/renpy.py", "rb");
+    FILE* renpy_file = fopen("romfs:/renpy.py", "rb");
     if (renpy_file == NULL)
     {
         renpy_file = fopen("./renpy.py", "rb");
         if (renpy_file == NULL)
         {
-            Py_Finalize();
             userShowMessage(
                 "The renpy.py file is not located in the same directory as this executable.\n"
                 "Press + to return.\n"
             );
-            return 1;
+            Py_Exit(1);
         }
         else
         {
@@ -224,26 +228,18 @@ int main(int argc, char* argv[])
     }
     else
     {
-        python_result = PyRun_SimpleFileEx(renpy_file, "romfs:/Contents/renpy.py", 1);
+        python_result = PyRun_SimpleFileEx(renpy_file, "romfs:/renpy.py", 1);
     }
 
     if (python_result == -1)
     {
-        Py_Finalize();
         userShowMessage(
             "I apologize, but an uncaught Python exception occurred.\n"
             "Press + to return.\n"
         );
-        return 1;
+        Py_Exit(1);
     }
 
-    if (!R_FAILED(romfs_result))
-    {
-        romfsExit();
-    }
-
-    socketExit();
-
-    Py_Finalize();
+    Py_Exit(0);
     return 0;
 }

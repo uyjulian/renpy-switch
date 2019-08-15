@@ -1,35 +1,39 @@
-# Quick and dirty build tips
-More details will be written at a later date!!
-
-Set switch vars in env: `source /opt/devkitpro/switchvars.sh`  
-Apply cpython 2.x patch  
-Configure for cpython 2.x 
+# Building
+This process will be streamlined at a later date.  
+## First steps
+Make sure you are using libnx 2.2.0; otherwise, you will get an error when trying to initialize the video subsystem.  
+Load the Switch variables in the environment: `source /opt/devkitpro/switchvars.sh`  
+## CPython 2.x
+Apply CPython 2.x patch contained in `cpython.patch`  
+Configure the CPython 2.x tree in a separate build folder:  
 ```
-./configure LDFLAGS="-specs=$DEVKITPRO/libnx/switch.specs $LDFLAGS" CONFIG_SITE="config.site" --host=aarch64-none-elf --build=$(config.guess) --prefix="$PORTLIBS_PREFIX" --disable-ipv6 --disable-shared
-for func in SETGROUPS FCHDIR FDATASYNC SYMLINK CHROOT
-do
-  sed -i "s/#define HAVE_$func 1/\/* #undef HAVE_$func *\//" pyconfig.h
-done
+../configure LDFLAGS="-specs=$DEVKITPRO/libnx/switch.specs $LDFLAGS" CONFIG_SITE="config.site" --host=aarch64-none-elf --build=$(config.guess) --prefix="$PORTLIBS_PREFIX" --disable-ipv6 --disable-shared --enable-optimizations
 ```  
-Make sure `config.site` in `cpython_config_files` is used  
-Make sure `Setup.local` in `cpython_config_files` is copied into `Modules` directory in build folder  
-Contents of `Lib` folder needs to be in `./lib/python2.7`; same directory as NRO  
-Files are needed to copy to correct directories in portlibs directory  
-No patches needed for Pygame_SDL2  
-Generate cython C files for Pygame_SDL2 
+Make sure `config.site` in `cpython_config_files` is in the build folder  
+Make sure `Setup.local` in `cpython_config_files` is copied into `Modules` directory in the build folder  
+Run `make libpython2.7.a` then `cp libpython2.7.a /opt/devkitpro/portlibs/switch/lib/libpython2.7.a`.  
+Run `sudo make inclinstall`.  
+Contents of `Lib` folder needs to be in either `./lib/python2.7` if the current directory is the same directory as NRO  
+## Pygame_SDL2
+Pygame_SDL2 does not require patches.  
+Generate Cython C files for Pygame_SDL2:  
 ```
-CC=aarch64-none-elf-gcc LDSHARED=aarch64-none-elf-gcc PYGAME_SDL2_CFLAGS="`sdl2-config --cflags`" PYGAME_SDL2_LDFLAGS="`sdl2-config --libs` -lpython2.7 -lz -specs=$DEVKITPRO/libnx/switch.specs -lm" PYGAME_SDL2_STATIC=1 python setup.py build_ext --include-dirs $PORTLIBS_PREFIX/include/python2.7 build install -O2 --prefix $PORTLIBS_PREFIX
+PYGAME_SDL2_STATIC=1 python setup.py
 ```  
-Apply Ren'Py patch
-Generate cython C files for Ren'Py modules 
+Afterwards, the files in `gen-static` go in the `source` folder of the repository.  
+## Ren'Py
+Apply Ren'Py patch contained in `renpy.patch`  
+Generate Cython C files for Ren'Py modules:  
 ```
-CC=aarch64-none-elf-gcc LDSHARED=aarch64-none-elf-gcc RENPY_DEPS_INSTALL=$PORTLIBS_PREFIX CFLAGS="-I$PORTLIBS_PREFIX/include `sdl2-config --cflags`" LDFLAGS="-L$PORTLIBS_PREFIX/lib `sdl2-config --libs`" RENPY_STATIC=1 python setup.py build_ext --include-dirs $PORTLIBS_PREFIX/include/python2.7 build install -O2 --prefix $PORTLIBS_PREFIX
+RENPY_DEPS_INSTALL=$PORTLIBS_PREFIX RENPY_STATIC=1 python setup.py
 ```  
+Afterwards, the files in `gen-static` go in the `source` folder of the repository.  
 Contents of `renpy` folder needs to be in `./renpy`; same directory as NRO 
 `renpy.py` needs to be in `./renpy.py`; same directory as NRO  
+## Finalization
 `game` folder (you can use the_question or tutorial as a test) needs to be in `./game`; same directory as NRO  
 
-Copy files like this: 
+Copy files until you get the following directory tree:  
 ```
 include/IMG_savepng.h
 include/SDL_gfxPrimitives.h
@@ -233,6 +237,7 @@ sysconfig.py
 tarfile.py
 tempfile.py
 textwrap.py
+threading.py
 token.py
 tokenize.py
 traceback.py
@@ -247,8 +252,7 @@ xml/etree/ElementTree.py
 xml/etree/__init__.py
 zipfile.py
 ```
-The following files from `pystub` are required to be copied to the Python standard library directory (replacing files) for Ren'Py to operate correctly:
+The following files from the `pystub` folder are required to be copied to the Python standard library directory (replacing files) for Ren'Py to operate correctly:
 ```
 subprocess.py
-threading.py
 ```

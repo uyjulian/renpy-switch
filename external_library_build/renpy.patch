@@ -20,8 +20,8 @@ index 0c7e53012..33a5eeee8 100644
  
  def path_to_common(renpy_base):
 -    return renpy_base + "/renpy/common"
-+    if os.path.exists("romfs:/Contents/renpy/common"):
-+        return "romfs:/Contents/renpy/common"
++    if os.path.exists("romfs:/renpy/common"):
++        return "romfs:/renpy/common"
 +    else:
 +        return renpy_base + "/renpy/common"
  
@@ -72,8 +72,8 @@ index 328a5b5be..1df01a039 100644
              break
      else:
 -        gamedir = basedir
-+        if os.path.exists("romfs:/Contents/game"):
-+            gamedir = "romfs:/Contents/game"
++        if os.path.exists("romfs:/game"):
++            gamedir = "romfs:/game"
 +        else:
 +            gamedir = basedir
  
@@ -95,19 +95,6 @@ index 328a5b5be..1df01a039 100644
 -        if not renpy.emscripten:
 +        if not (renpy.emscripten or renpy.switch):
              subprocess.Popen.__del__ = popen_del
-diff --git a/renpy/config.py b/renpy/config.py
-index 65338a1e2..6eef70c0d 100644
---- a/renpy/config.py
-+++ b/renpy/config.py
-@@ -819,7 +819,7 @@ fast_skipping_callbacks = [ ]
- 
- # Should the audio periodic callback run in its own thread.
- audio_periodic_thread = True
--if renpy.emscripten:
-+if renpy.emscripten or renpy.switch:
-     audio_periodic_thread = False
- 
- # A list of fonts to preload on Ren'Py startup.
 diff --git a/renpy/gl/gldraw.pyx b/renpy/gl/gldraw.pyx
 index 4e598e38d..c39345e67 100644
 --- a/renpy/gl/gldraw.pyx
@@ -140,19 +127,6 @@ index 4e598e38d..c39345e67 100644
                  glrtt_fbo,
                  "RENPY_GL_RTT",
                  "fbo",
-diff --git a/renpy/loadsave.py b/renpy/loadsave.py
-index 4b3898740..86102975c 100644
---- a/renpy/loadsave.py
-+++ b/renpy/loadsave.py
-@@ -558,6 +558,8 @@ def force_autosave(take_screenshot=False, block=False):
-         t = threading.Thread(target=autosave_thread, args=(take_screenshot,))
-         t.daemon = True
-         t.start()
-+    elif renpy.switch:
-+        autosave_thread(take_screenshot)
-     else:
-         import emscripten
-         emscripten.async_call(autosave_thread, take_screenshot, -1)
 diff --git a/renpy/persistent.py b/renpy/persistent.py
 index 244a0ba80..f966b4d22 100644
 --- a/renpy/persistent.py
