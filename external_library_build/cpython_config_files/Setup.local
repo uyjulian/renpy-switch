@@ -32,3 +32,33 @@ _sha512 sha512module.c
 
 #echo 'strop stropmodule.c' >> Modules/Setup.local  # for platform module -> use sys.platform
 
+# Extra modules
+_bisect _bisectmodule.c	# Bisection algorithms
+_codecs _codecsmodule.c		# access to the builtin codecs and codec registry
+_codecs_cn cjkcodecs/_codecs_cn.c
+_codecs_hk cjkcodecs/_codecs_hk.c
+_codecs_iso2022 cjkcodecs/_codecs_iso2022.c
+_codecs_jp cjkcodecs/_codecs_jp.c
+_codecs_kr cjkcodecs/_codecs_kr.c
+_codecs_tw cjkcodecs/_codecs_tw.c
+_csv _csv.c
+_elementtree -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DUSE_PYEXPAT_CAPI _elementtree.c	# elementtree accelerator
+_heapq _heapqmodule.c		# Heapq type
+_locale _localemodule.c  # -lintl
+_multibytecodec cjkcodecs/multibytecodec.c
+_sre _sre.c			# Fredrik Lundh's new regular expressions
+_symtable symtablemodule.c
+_testcapi _testcapimodule.c    # Python C API test module
+_weakref _weakref.c             # weak references
+cmath cmathmodule.c _math.c # -lm # complex math library functions
+errno errnomodule.c		# posix (UNIX) errno values
+fcntl fcntlmodule.c	# fcntl(2) and ioctl(2)
+parser parsermodule.c
+posix posixmodule.c		# posix (UNIX) system calls
+pyexpat expat/xmlparse.c expat/xmlrole.c expat/xmltok.c pyexpat.c -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DXML_POOR_ENTROPY=1 -DUSE_PYEXPAT_CAPI
+strop stropmodule.c		# String manipulations
+timing timingmodule.c
+unicodedata unicodedata.c    # static Unicode character database
+xx xxmodule.c
+xxsubtype xxsubtype.c
+zipimport zipimport.c
