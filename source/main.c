@@ -26,11 +26,23 @@ PyMODINIT_FUNC initpygame_sdl2_transform();
 PyMODINIT_FUNC init_renpy();
 PyMODINIT_FUNC init_renpybidi();
 PyMODINIT_FUNC initrenpy_audio_renpysound();
+PyMODINIT_FUNC initrenpy_display_accelerator();
+PyMODINIT_FUNC initrenpy_display_render();
+PyMODINIT_FUNC initrenpy_gl_gl();
+PyMODINIT_FUNC initrenpy_gl_gldraw();
+PyMODINIT_FUNC initrenpy_gl_glenviron_shader();
+PyMODINIT_FUNC initrenpy_gl_glrtt_copy();
+PyMODINIT_FUNC initrenpy_gl_glrtt_fbo();
+PyMODINIT_FUNC initrenpy_gl_gltexture();
+PyMODINIT_FUNC initrenpy_gl2_gl2draw();
+PyMODINIT_FUNC initrenpy_gl2_gl2environ_shader();
+PyMODINIT_FUNC initrenpy_gl2_gl2rtt_fbo();
+PyMODINIT_FUNC initrenpy_gl2_gl2texture();
+PyMODINIT_FUNC initrenpy_gl2_uguu();
+PyMODINIT_FUNC initrenpy_gl2_uguugl();
 PyMODINIT_FUNC initrenpy_parsersupport();
 PyMODINIT_FUNC initrenpy_pydict();
 PyMODINIT_FUNC initrenpy_style();
-PyMODINIT_FUNC initrenpy_styledata_styleclass();
-PyMODINIT_FUNC initrenpy_styledata_stylesets();
 PyMODINIT_FUNC initrenpy_styledata_style_activate_functions();
 PyMODINIT_FUNC initrenpy_styledata_style_functions();
 PyMODINIT_FUNC initrenpy_styledata_style_hover_functions();
@@ -41,38 +53,14 @@ PyMODINIT_FUNC initrenpy_styledata_style_selected_functions();
 PyMODINIT_FUNC initrenpy_styledata_style_selected_hover_functions();
 PyMODINIT_FUNC initrenpy_styledata_style_selected_idle_functions();
 PyMODINIT_FUNC initrenpy_styledata_style_selected_insensitive_functions();
-PyMODINIT_FUNC initrenpy_display_render();
-PyMODINIT_FUNC initrenpy_display_accelerator();
-PyMODINIT_FUNC initrenpy_gl_gl();
-PyMODINIT_FUNC initrenpy_gl_gldraw();
-PyMODINIT_FUNC initrenpy_gl_gltexture();
-PyMODINIT_FUNC initrenpy_gl_glenviron_shader();
-PyMODINIT_FUNC initrenpy_gl_glrtt_copy();
-PyMODINIT_FUNC initrenpy_gl_glrtt_fbo();
+PyMODINIT_FUNC initrenpy_styledata_styleclass();
+PyMODINIT_FUNC initrenpy_styledata_stylesets();
+PyMODINIT_FUNC initrenpy_text_ftfont();
 PyMODINIT_FUNC initrenpy_text_textsupport();
 PyMODINIT_FUNC initrenpy_text_texwrap();
-PyMODINIT_FUNC initrenpy_text_ftfont();
 
-void userShowMessage(const char* message)
+void cleanup()
 {
-    consoleInit(NULL);
-    fprintf(stderr, "%s\n", message);
-    consoleUpdate(NULL);
-
-    while (appletMainLoop())
-    {
-        hidScanInput();
-
-        if (hidKeysDown(CONTROLLER_P1_AUTO) & KEY_PLUS)
-        {
-            break;
-        }
-    }
-
-    consoleExit(NULL);
-}
-
-void cleanup() {
     romfsExit();
     socketExit();
 }
@@ -111,11 +99,23 @@ int main(int argc, char* argv[])
         {"_renpy", init_renpy},
         {"_renpybidi", init_renpybidi},
         {"renpy.audio.renpysound", initrenpy_audio_renpysound},
+        {"renpy.display.accelerator", initrenpy_display_accelerator},
+        {"renpy.display.render", initrenpy_display_render},
+        {"renpy.gl.gl", initrenpy_gl_gl},
+        {"renpy.gl.gldraw", initrenpy_gl_gldraw},
+        {"renpy.gl.glenviron_shader", initrenpy_gl_glenviron_shader},
+        {"renpy.gl.glrtt_copy", initrenpy_gl_glrtt_copy},
+        {"renpy.gl.glrtt_fbo", initrenpy_gl_glrtt_fbo},
+        {"renpy.gl.gltexture", initrenpy_gl_gltexture},
+        {"renpy.gl2.gl2draw", initrenpy_gl2_gl2draw},
+        {"renpy.gl2.gl2environ_shader", initrenpy_gl2_gl2environ_shader},
+        {"renpy.gl2.gl2rtt_fbo", initrenpy_gl2_gl2rtt_fbo},
+        {"renpy.gl2.gl2texture", initrenpy_gl2_gl2texture},
+        {"renpy.gl2.uguu", initrenpy_gl2_uguu},
+        {"renpy.gl2.uguugl", initrenpy_gl2_uguugl},
         {"renpy.parsersupport", initrenpy_parsersupport},
         {"renpy.pydict", initrenpy_pydict},
         {"renpy.style", initrenpy_style},
-        {"renpy.styledata.styleclass", initrenpy_styledata_styleclass},
-        {"renpy.styledata.stylesets", initrenpy_styledata_stylesets},
         {"renpy.styledata.style_activate_functions", initrenpy_styledata_style_activate_functions},
         {"renpy.styledata.style_functions", initrenpy_styledata_style_functions},
         {"renpy.styledata.style_hover_functions", initrenpy_styledata_style_hover_functions},
@@ -126,31 +126,22 @@ int main(int argc, char* argv[])
         {"renpy.styledata.style_selected_hover_functions", initrenpy_styledata_style_selected_hover_functions},
         {"renpy.styledata.style_selected_idle_functions", initrenpy_styledata_style_selected_idle_functions},
         {"renpy.styledata.style_selected_insensitive_functions", initrenpy_styledata_style_selected_insensitive_functions},
-        {"renpy.display.render", initrenpy_display_render},
-        {"renpy.display.accelerator", initrenpy_display_accelerator},
-        {"renpy.gl.gl", initrenpy_gl_gl},
-        {"renpy.gl.gldraw", initrenpy_gl_gldraw},
-        {"renpy.gl.gltexture", initrenpy_gl_gltexture},
-        {"renpy.gl.glenviron_shader", initrenpy_gl_glenviron_shader},
-        {"renpy.gl.glrtt_copy", initrenpy_gl_glrtt_copy},
-        {"renpy.gl.glrtt_fbo", initrenpy_gl_glrtt_fbo},
+        {"renpy.styledata.styleclass", initrenpy_styledata_styleclass},
+        {"renpy.styledata.stylesets", initrenpy_styledata_stylesets},
+        {"renpy.text.ftfont", initrenpy_text_ftfont},
         {"renpy.text.textsupport", initrenpy_text_textsupport},
         {"renpy.text.texwrap", initrenpy_text_texwrap},
-        {"renpy.text.ftfont", initrenpy_text_ftfont},
 
         {NULL, NULL}
     };
 
-    FILE* sysconfigdata_file = fopen("romfs:/lib/python2.7/_sysconfigdata.py", "rb");
+    FILE* sysconfigdata_file = fopen("romfs:/Contents/lib/python2.7/_sysconfigdata.py", "rb");
     if (sysconfigdata_file == NULL)
     {
         sysconfigdata_file = fopen("./lib/python2.7/_sysconfigdata.py", "rb");
         if (sysconfigdata_file == NULL)
         {
-            userShowMessage(
-                "The lib/python2.7/_sysconfigdata.py file is not located in the same directory as this executable.\n"
-                "Press + to return.\n"
-            );
+            fprintf(stderr, "Could not find lib/python2.7/_sysconfigdata.py.\n");
             Py_Exit(1);
         }
         else
@@ -161,7 +152,8 @@ int main(int argc, char* argv[])
     }
     else
     {
-        Py_SetPythonHome("romfs:/lib/python2.7");
+        Py_DontWriteBytecodeFlag = 1;
+        Py_SetPythonHome("romfs:/Contents/lib/python2.7");
         fclose(sysconfigdata_file);
     }
 
@@ -179,7 +171,7 @@ int main(int argc, char* argv[])
 
         "del sys.path[:]\n"
 
-        "pathdirs = ['romfs:/lib/python2.7', 'romfs:/', './lib/python2.7', '.']\n"
+        "pathdirs = ['romfs:/Contents/lib/python2.7', 'romfs:/Contents', './lib/python2.7', './lib']\n"
 
         "for i in pathdirs:\n"
         "\tsys.path.append(i)\n"
@@ -201,24 +193,17 @@ int main(int argc, char* argv[])
 
     if (python_result == -1)
     {
-        userShowMessage(
-            "An error occurred while initializing the Python engine.\n"
-            "Please verify that the lib/python2.7 folder in the same directory as this executable contains the correct files.\n"
-            "Press + to return.\n"
-        );
+        fprintf(stderr, "Could not import the python libraries.\n");
         Py_Exit(1);
     }
 
-    FILE* renpy_file = fopen("romfs:/renpy.py", "rb");
+    FILE* renpy_file = fopen("romfs:/Contents/renpy.py", "rb");
     if (renpy_file == NULL)
     {
         renpy_file = fopen("./renpy.py", "rb");
         if (renpy_file == NULL)
         {
-            userShowMessage(
-                "The renpy.py file is not located in the same directory as this executable.\n"
-                "Press + to return.\n"
-            );
+            fprintf(stderr, "The renpy.py file is not located in the same directory as this executable.\n");
             Py_Exit(1);
         }
         else
@@ -228,15 +213,12 @@ int main(int argc, char* argv[])
     }
     else
     {
-        python_result = PyRun_SimpleFileEx(renpy_file, "romfs:/renpy.py", 1);
+        python_result = PyRun_SimpleFileEx(renpy_file, "romfs:/Contents/renpy.py", 1);
     }
 
     if (python_result == -1)
     {
-        userShowMessage(
-            "I apologize, but an uncaught Python exception occurred.\n"
-            "Press + to return.\n"
-        );
+        fprintf(stderr, "An uncaught Python exception occurred.\n");
         Py_Exit(1);
     }
 
