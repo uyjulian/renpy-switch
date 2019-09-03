@@ -12,7 +12,7 @@ index d5b6d310f..80c37ae59 100644
  #endif
  
 diff --git a/renpy.py b/renpy.py
-index 0c7e53012..c792a5bac 100644
+index 0c7e53012..33a5eeee8 100644
 --- a/renpy.py
 +++ b/renpy.py
 @@ -37,7 +37,10 @@ import warnings
@@ -20,8 +20,8 @@ index 0c7e53012..c792a5bac 100644
  
  def path_to_common(renpy_base):
 -    return renpy_base + "/renpy/common"
-+    if os.path.exists("romfs:/renpy/common"):
-+        return "romfs:/renpy/common"
++    if os.path.exists("romfs:/Contents/renpy/common"):
++        return "romfs:/Contents/renpy/common"
 +    else:
 +        return renpy_base + "/renpy/common"
  
@@ -64,7 +64,7 @@ index e0c42d57b..c19a8a4c8 100644
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
 diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
-index 328a5b5be..fc5fc0f83 100644
+index 328a5b5be..1df01a039 100644
 --- a/renpy/bootstrap.py
 +++ b/renpy/bootstrap.py
 @@ -232,7 +232,10 @@ def bootstrap(renpy_base):
@@ -72,8 +72,8 @@ index 328a5b5be..fc5fc0f83 100644
              break
      else:
 -        gamedir = basedir
-+        if os.path.exists("romfs:/game"):
-+            gamedir = "romfs:/game"
++        if os.path.exists("romfs:/Contents/game"):
++            gamedir = "romfs:/Contents/game"
 +        else:
 +            gamedir = basedir
  
