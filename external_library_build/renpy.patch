@@ -12,7 +12,7 @@ index d5b6d310f..80c37ae59 100644
  #endif
  
 diff --git a/renpy.py b/renpy.py
-index 0c7e53012..33a5eeee8 100644
+index 0c7e53012..c792a5bac 100644
 --- a/renpy.py
 +++ b/renpy.py
 @@ -37,7 +37,10 @@ import warnings
@@ -38,10 +38,10 @@ index 0c7e53012..33a5eeee8 100644
          rv = "~/.renpy/" + save_directory
          return os.path.expanduser(rv)
 diff --git a/renpy/__init__.py b/renpy/__init__.py
-index d33dc6b59..3e37d3c0b 100644
+index e0c42d57b..c19a8a4c8 100644
 --- a/renpy/__init__.py
 +++ b/renpy/__init__.py
-@@ -72,6 +72,7 @@ linux = False
+@@ -71,6 +71,7 @@ linux = False
  android = False
  ios = False
  emscripten = False
@@ -49,7 +49,7 @@ index d33dc6b59..3e37d3c0b 100644
  
  # Should we enable experimental features and debugging?
  experimental = "RENPY_EXPERIMENTAL" in os.environ
-@@ -126,10 +127,11 @@ elif "ANDROID_PRIVATE" in os.environ:
+@@ -125,10 +126,11 @@ elif "ANDROID_PRIVATE" in os.environ:
  elif sys.platform == 'emscripten' or "RENPY_EMSCRIPTEN" in os.environ:
      emscripten = True
  else:
@@ -64,7 +64,7 @@ index d33dc6b59..3e37d3c0b 100644
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
 diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
-index 328a5b5be..1df01a039 100644
+index 328a5b5be..fc5fc0f83 100644
 --- a/renpy/bootstrap.py
 +++ b/renpy/bootstrap.py
 @@ -232,7 +232,10 @@ def bootstrap(renpy_base):

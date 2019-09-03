@@ -46,7 +46,7 @@ ROMFS       := romfs
 
 APP_TITLE   := Ren'Py
 APP_AUTHOR  := renpytom
-APP_VERSION := 7.3.0 prerelease
+APP_VERSION := 7.3.2
 APP_TITLEID := 52656E2750794E58
 
 #---------------------------------------------------------------------------------
