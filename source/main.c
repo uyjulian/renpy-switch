@@ -105,7 +105,9 @@ int main(int argc, char* argv[])
         {"_renpybidi", init_renpybidi},
         {"renpy.audio.renpysound", initrenpy_audio_renpysound},
         {"renpy.display.accelerator", initrenpy_display_accelerator},
+#if 0
         {"renpy.display.matrix", initrenpy_display_matrix},
+#endif
         {"renpy.display.render", initrenpy_display_render},
         {"renpy.gl.gl", initrenpy_gl_gl},
         {"renpy.gl.gldraw", initrenpy_gl_gldraw},
@@ -115,9 +117,13 @@ int main(int argc, char* argv[])
         {"renpy.gl.gltexture", initrenpy_gl_gltexture},
         {"renpy.gl2.gl2draw", initrenpy_gl2_gl2draw},
         {"renpy.gl2.gl2environ_shader", initrenpy_gl2_gl2environ_shader},
+#if 0
         {"renpy.gl2.gl2geometry", initrenpy_gl2_gl2geometry},
+#endif
         {"renpy.gl2.gl2rtt_fbo", initrenpy_gl2_gl2rtt_fbo},
+#if 0
         {"renpy.gl2.gl2shader", initrenpy_gl2_gl2shader},
+#endif
         {"renpy.gl2.gl2texture", initrenpy_gl2_gl2texture},
         {"renpy.gl2.uguu", initrenpy_gl2_uguu},
         {"renpy.gl2.uguugl", initrenpy_gl2_uguugl},
