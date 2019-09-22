@@ -1,16 +1,18 @@
 diff --git a/module/glcompat.h b/module/glcompat.h
-index d5b6d310f..80c37ae59 100644
+index d5b6d310f..fc66bcb50 100644
 --- a/module/glcompat.h
 +++ b/module/glcompat.h
-@@ -39,7 +39,7 @@
+@@ -37,6 +37,10 @@
  
+     #define RENPY_GLES_2
+ 
++#elif defined __SWITCH__
++
++    #define RENPY_GLES_2
++
  #else
  
--	#define RENPY_OPENGL
-+	#define RENPY_GLES_2
- 
- #endif
- 
+ 	#define RENPY_OPENGL
 diff --git a/renpy.py b/renpy.py
 index 0c7e53012..33a5eeee8 100644
 --- a/renpy.py
@@ -95,6 +97,40 @@ index 328a5b5be..1df01a039 100644
 -        if not renpy.emscripten:
 +        if not (renpy.emscripten or renpy.switch):
              subprocess.Popen.__del__ = popen_del
+diff --git a/renpy/display/pgrender.py b/renpy/display/pgrender.py
+index c293895c9..50054e4be 100644
+--- a/renpy/display/pgrender.py
++++ b/renpy/display/pgrender.py
+@@ -29,6 +29,7 @@ import pygame_sdl2 as pygame
+ import threading
+ import renpy.display
+ import renpy.audio
++import gc
+ 
+ 
+ # Sample surfaces, with and without alpha.
+@@ -159,6 +160,8 @@ def load_image(f, filename):
+                 surf = pygame.image.load(f, renpy.exports.fsencode(filename))
+ 
+     except Exception as e:
++        renpy.exports.free_memory()
++        gc.collect()
+         raise Exception("Could not load image {!r}: {!r}".format(filename, e))
+ 
+     rv = copy_surface_unscaled(surf)
+diff --git a/renpy/display/video.py b/renpy/display/video.py
+index 44d236630..8f5eeb4ef 100644
+--- a/renpy/display/video.py
++++ b/renpy/display/video.py
+@@ -374,7 +374,7 @@ class Movie(renpy.display.core.Displayable):
+ 
+         self.play_callback = play_callback
+ 
+-        if (self.channel == "movie") and (renpy.config.hw_video) and renpy.mobile:
++        if (self.channel == "movie") and (renpy.config.hw_video) and (renpy.android or renpy.ios):
+             raise Exception("Movie(channel='movie') doesn't work on mobile when config.hw_video is true. (Use a different channel argument.)")
+ 
+     def render(self, width, height, st, at):
 diff --git a/renpy/gl/gldraw.pyx b/renpy/gl/gldraw.pyx
 index 4e598e38d..c39345e67 100644
 --- a/renpy/gl/gldraw.pyx
