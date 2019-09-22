@@ -17,8 +17,8 @@ The file format can be changed without changing the file extension, so no script
 
 ## RomFS Integration
 To integrate the game into one single nro file, uncomment line 45 of Makefile, place game files in a folder named romfs, and build as described in the "Building" section.  
-NOTE: If you do not compile the py and rpy files to pyc and rpyc respectively by running the game at least once on a read-write filesystem, the loading time required until the title screen is seen will be increased.  
-The `py_compile` module can be used to compile py files to pyc. Example usage of this command: `find . -name \*.py -exec python -m py_compile {} \;`  
+NOTE: If you do not compile the py and rpy files to pyo and rpyc respectively by running the game at least once on a read-write filesystem, the loading time required until the title screen is seen will be increased.  
+The `py_compile` module can be used to compile py files to pyo. Example usage of this command: `find . -name \*.py -exec python -O -m py_compile {} \;`  
 
 ## File system layout
 The following files or folders are required to be in the same directory as the .nro or in RomFS:  
