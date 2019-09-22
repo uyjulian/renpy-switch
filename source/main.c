@@ -28,6 +28,7 @@ PyMODINIT_FUNC init_renpybidi();
 PyMODINIT_FUNC initrenpy_audio_renpysound();
 PyMODINIT_FUNC initrenpy_display_accelerator();
 PyMODINIT_FUNC initrenpy_display_render();
+PyMODINIT_FUNC initrenpy_display_matrix();
 PyMODINIT_FUNC initrenpy_gl_gl();
 PyMODINIT_FUNC initrenpy_gl_gldraw();
 PyMODINIT_FUNC initrenpy_gl_glenviron_shader();
@@ -36,7 +37,9 @@ PyMODINIT_FUNC initrenpy_gl_glrtt_fbo();
 PyMODINIT_FUNC initrenpy_gl_gltexture();
 PyMODINIT_FUNC initrenpy_gl2_gl2draw();
 PyMODINIT_FUNC initrenpy_gl2_gl2environ_shader();
+PyMODINIT_FUNC initrenpy_gl2_gl2geometry();
 PyMODINIT_FUNC initrenpy_gl2_gl2rtt_fbo();
+PyMODINIT_FUNC initrenpy_gl2_gl2shader();
 PyMODINIT_FUNC initrenpy_gl2_gl2texture();
 PyMODINIT_FUNC initrenpy_gl2_uguu();
 PyMODINIT_FUNC initrenpy_gl2_uguugl();
@@ -67,6 +70,7 @@ void cleanup()
 
 int main(int argc, char* argv[])
 {
+    setenv("MESA_NO_ERROR", "1", 1);
     romfsInit();
     socketInitializeDefault();
     nxlinkStdio();
@@ -74,6 +78,7 @@ int main(int argc, char* argv[])
     Py_NoSiteFlag = 1;
     Py_IgnoreEnvironmentFlag = 1;
     Py_NoUserSiteDirectory = 1;
+    Py_OptimizeFlag = 1;
 
     static struct _inittab builtins[] = {
         {"pygame_sdl2.event", initpygame_sdl2_event},
@@ -100,6 +105,7 @@ int main(int argc, char* argv[])
         {"_renpybidi", init_renpybidi},
         {"renpy.audio.renpysound", initrenpy_audio_renpysound},
         {"renpy.display.accelerator", initrenpy_display_accelerator},
+        {"renpy.display.matrix", initrenpy_display_matrix},
         {"renpy.display.render", initrenpy_display_render},
         {"renpy.gl.gl", initrenpy_gl_gl},
         {"renpy.gl.gldraw", initrenpy_gl_gldraw},
@@ -109,7 +115,9 @@ int main(int argc, char* argv[])
         {"renpy.gl.gltexture", initrenpy_gl_gltexture},
         {"renpy.gl2.gl2draw", initrenpy_gl2_gl2draw},
         {"renpy.gl2.gl2environ_shader", initrenpy_gl2_gl2environ_shader},
+        {"renpy.gl2.gl2geometry", initrenpy_gl2_gl2geometry},
         {"renpy.gl2.gl2rtt_fbo", initrenpy_gl2_gl2rtt_fbo},
+        {"renpy.gl2.gl2shader", initrenpy_gl2_gl2shader},
         {"renpy.gl2.gl2texture", initrenpy_gl2_gl2texture},
         {"renpy.gl2.uguu", initrenpy_gl2_uguu},
         {"renpy.gl2.uguugl", initrenpy_gl2_uguugl},
