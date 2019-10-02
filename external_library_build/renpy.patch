@@ -1,5 +1,5 @@
 diff --git a/module/glcompat.h b/module/glcompat.h
-index d5b6d310f..fc66bcb50 100644
+index b88f09f00..674b4c0e3 100644
 --- a/module/glcompat.h
 +++ b/module/glcompat.h
 @@ -37,6 +37,10 @@
@@ -40,7 +40,7 @@ index 0c7e53012..33a5eeee8 100644
          rv = "~/.renpy/" + save_directory
          return os.path.expanduser(rv)
 diff --git a/renpy/__init__.py b/renpy/__init__.py
-index e0c42d57b..c19a8a4c8 100644
+index 9d07c6293..39c6b07de 100644
 --- a/renpy/__init__.py
 +++ b/renpy/__init__.py
 @@ -71,6 +71,7 @@ linux = False
@@ -66,10 +66,10 @@ index e0c42d57b..c19a8a4c8 100644
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
 diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
-index 328a5b5be..1df01a039 100644
+index 8afc163b4..62b0d32ab 100644
 --- a/renpy/bootstrap.py
 +++ b/renpy/bootstrap.py
-@@ -232,7 +232,10 @@ def bootstrap(renpy_base):
+@@ -234,7 +234,10 @@ def bootstrap(renpy_base):
          if os.path.isdir(gamedir):
              break
      else:
@@ -81,7 +81,7 @@ index 328a5b5be..1df01a039 100644
  
      sys.path.insert(0, basedir)
  
-@@ -305,6 +308,8 @@ You may be using a system install of python. Please run {0}.sh,
+@@ -307,6 +310,8 @@ You may be using a system install of python. Please run {0}.sh,
  
                  if renpy.android:
                      renpy.config.logdir = os.environ['ANDROID_PUBLIC']
@@ -90,7 +90,7 @@ index 328a5b5be..1df01a039 100644
                  else:
                      renpy.config.logdir = basedir
  
-@@ -357,5 +362,5 @@ You may be using a system install of python. Please run {0}.sh,
+@@ -359,5 +364,5 @@ You may be using a system install of python. Please run {0}.sh,
  
          # Prevent subprocess from throwing errors while trying to run it's
          # __del__ method during shutdown.
@@ -132,10 +132,10 @@ index 44d236630..8f5eeb4ef 100644
  
      def render(self, width, height, st, at):
 diff --git a/renpy/gl/gldraw.pyx b/renpy/gl/gldraw.pyx
-index 4e598e38d..c39345e67 100644
+index adf7b3860..5d3c53633 100644
 --- a/renpy/gl/gldraw.pyx
 +++ b/renpy/gl/gldraw.pyx
-@@ -523,6 +523,9 @@ cdef class GLDraw:
+@@ -521,6 +521,9 @@ cdef class GLDraw:
              # WebGL is GLES
              gltexture.use_gles()
  
@@ -145,7 +145,7 @@ index 4e598e38d..c39345e67 100644
          else:
              gltexture.use_gl()
  
-@@ -568,7 +571,7 @@ cdef class GLDraw:
+@@ -566,7 +569,7 @@ cdef class GLDraw:
  
          # Pick a texture environment subsystem.
  
@@ -154,7 +154,7 @@ index 4e598e38d..c39345e67 100644
              glenviron_shader,
              "RENPY_GL_ENVIRON",
              "shader",
-@@ -627,7 +630,7 @@ cdef class GLDraw:
+@@ -625,7 +628,7 @@ cdef class GLDraw:
                  return False
  
          # Pick a Render-to-texture method.
