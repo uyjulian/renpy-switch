@@ -55,3 +55,8 @@ dkms.conf
 build/
 *.nacp
 *.nro
+
+# Other files and folders related to Ren'Py for Nintendo Switch
+source/module/
+include/module/
+romfs/

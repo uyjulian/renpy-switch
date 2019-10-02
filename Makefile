@@ -39,14 +39,14 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET      := $(notdir $(CURDIR))
 BUILD       := build
-SOURCES     := source
+SOURCES     := source source/module
 DATA        := data
-INCLUDES    := include include/fribidi-src/lib
+INCLUDES    := include include/module include/module/src include/module/fribidi-src/lib
 ROMFS       := romfs
 
 APP_TITLE   := Ren'Py
 APP_AUTHOR  := renpytom
-APP_VERSION := 7.3.2
+APP_VERSION := 7.3.3
 APP_TITLEID := 52656E2750794E58
 
 #---------------------------------------------------------------------------------
