@@ -1,3 +1,51 @@
+diff --git a/module/ffmedia.c b/module/ffmedia.c
+index 300c325aa..253204538 100644
+--- a/module/ffmedia.c
++++ b/module/ffmedia.c
+@@ -134,6 +134,7 @@ typedef struct SurfaceQueueEntry {
+ 
+ typedef struct MediaState {
+ 
++	SDL_Thread* thread;
+ 
+ 	/* The condition and lock. */
+ 	SDL_cond* cond;
+@@ -1329,8 +1330,13 @@ void media_start(MediaState *ms) {
+ 	SDL_Thread *t = SDL_CreateThread(decode_thread, buf, (void *) ms);
+ 
+ 	if (t) {
++#ifdef __SWITCH__
++		ms->thread = t;
++#endif
+ 		ms->started = 1;
++#ifndef __SWITCH__
+ 		SDL_DetachThread(t);
++#endif
+ 	}
+ #endif
+ }
+@@ -1389,6 +1395,10 @@ void media_close(MediaState *ms) {
+ 		return;
+ 	}
+ 
++#ifdef __SWITCH__
++	SDL_Thread *t = ms->thread;
++#endif
++
+ 	/* Tell the decoder to terminate. It will deallocate everything for us. */
+ 	SDL_LockMutex(ms->lock);
+ 	ms->quit = 1;
+@@ -1400,6 +1410,10 @@ void media_close(MediaState *ms) {
+ 	SDL_CondBroadcast(ms->cond);
+ 	SDL_UnlockMutex(ms->lock);
+ 
++#ifdef __SWITCH__
++	SDL_WaitThread(t, NULL);
++#endif
++
+ }
+ 
+ void media_advance_time(void) {
 diff --git a/module/glcompat.h b/module/glcompat.h
 index b88f09f00..674b4c0e3 100644
 --- a/module/glcompat.h
@@ -66,7 +114,7 @@ index 9d07c6293..39c6b07de 100644
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
 diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
-index 8afc163b4..62b0d32ab 100644
+index 8afc163b4..7bc2c9342 100644
 --- a/renpy/bootstrap.py
 +++ b/renpy/bootstrap.py
 @@ -234,7 +234,10 @@ def bootstrap(renpy_base):
@@ -80,6 +128,15 @@ index 8afc163b4..62b0d32ab 100644
 +            gamedir = basedir
  
      sys.path.insert(0, basedir)
+ 
+@@ -268,7 +271,7 @@ You may be using a system install of python. Please run {0}.sh,
+         raise
+ 
+     # If we're not given a command, show the presplash.
+-    if args.command == "run" and not renpy.mobile:
++    if args.command == "run" and ((not renpy.mobile) or renpy.switch):
+         import renpy.display.presplash  # @Reimport
+         renpy.display.presplash.start(basedir, gamedir)
  
 @@ -307,6 +310,8 @@ You may be using a system install of python. Please run {0}.sh,
  
