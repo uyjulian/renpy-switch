@@ -88,7 +88,7 @@ index 0c7e53012..33a5eeee8 100644
          rv = "~/.renpy/" + save_directory
          return os.path.expanduser(rv)
 diff --git a/renpy/__init__.py b/renpy/__init__.py
-index 9d07c6293..39c6b07de 100644
+index 2c016c874..0dc16f3cd 100644
 --- a/renpy/__init__.py
 +++ b/renpy/__init__.py
 @@ -71,6 +71,7 @@ linux = False
@@ -166,27 +166,64 @@ index f72ecbbca..b20f73aa9 100644
  
          # Needed for Unity.
          wmclass = renpy.config.save_directory or os.path.basename(sys.argv[0])
-diff --git a/renpy/display/pgrender.py b/renpy/display/pgrender.py
-index c293895c9..50054e4be 100644
---- a/renpy/display/pgrender.py
-+++ b/renpy/display/pgrender.py
-@@ -29,6 +29,7 @@ import pygame_sdl2 as pygame
+diff --git a/renpy/display/im.py b/renpy/display/im.py
+index 576323000..0cf8dbf2e 100644
+--- a/renpy/display/im.py
++++ b/renpy/display/im.py
+@@ -32,6 +32,7 @@ import cStringIO
  import threading
- import renpy.display
- import renpy.audio
+ import time
+ import io
 +import gc
  
  
- # Sample surfaces, with and without alpha.
-@@ -159,6 +160,8 @@ def load_image(f, filename):
-                 surf = pygame.image.load(f, renpy.exports.fsencode(filename))
+ # This is an entry in the image cache.
+@@ -256,19 +257,35 @@ class Cache(object):
+         # Otherwise, we load the image ourselves.
+         if ce is None:
  
-     except Exception as e:
-+        renpy.exports.free_memory()
-+        gc.collect()
-         raise Exception("Could not load image {!r}: {!r}".format(filename, e))
+-            try:
+-                if image in self.pin_cache:
+-                    surf = self.pin_cache[image]
+-                else:
++            tries = 2
++            while True:
++                try:
++                    if image in self.pin_cache:
++                        surf = self.pin_cache[image]
++                    else:
  
-     rv = copy_surface_unscaled(surf)
+-                    if not predict:
+-                        with renpy.game.ExceptionInfo("While loading %r:", image):
++                        if not predict:
++                            with renpy.game.ExceptionInfo("While loading %r:", image):
++                                surf = image.load()
++                        else:
+                             surf = image.load()
+-                    else:
+-                        surf = image.load()
+ 
+-            except:
+-                raise
++                    break
++                except Exception as e:
++                    estr = repr(e)
++                    if tries >= 1:
++                        if ("Failed to allocate" in estr) or ("Out of memory" in estr) or ("Failed to decode" in estr):
++                            with self.lock:
++                                if tries <= 1:
++                                    self.cache_limit /= 2
++                                self.cleanout()
++                            gc.collect()
++
++                            if gc.garbage:
++                                del gc.garbage[:]
++                            tries -= 1
++                            continue
++                    raise
+ 
+             w, h = surf.get_size()
+ 
 diff --git a/renpy/display/video.py b/renpy/display/video.py
 index 44d236630..8f5eeb4ef 100644
 --- a/renpy/display/video.py
@@ -201,10 +238,10 @@ index 44d236630..8f5eeb4ef 100644
  
      def render(self, width, height, st, at):
 diff --git a/renpy/gl/gldraw.pyx b/renpy/gl/gldraw.pyx
-index adf7b3860..5d3c53633 100644
+index 864b2ab27..527447395 100644
 --- a/renpy/gl/gldraw.pyx
 +++ b/renpy/gl/gldraw.pyx
-@@ -521,6 +521,9 @@ cdef class GLDraw:
+@@ -522,6 +522,9 @@ cdef class GLDraw:
              # WebGL is GLES
              gltexture.use_gles()
  
@@ -214,7 +251,7 @@ index adf7b3860..5d3c53633 100644
          else:
              gltexture.use_gl()
  
-@@ -566,7 +569,7 @@ cdef class GLDraw:
+@@ -567,7 +570,7 @@ cdef class GLDraw:
  
          # Pick a texture environment subsystem.
  
@@ -223,7 +260,7 @@ index adf7b3860..5d3c53633 100644
              glenviron_shader,
              "RENPY_GL_ENVIRON",
              "shader",
-@@ -625,7 +628,7 @@ cdef class GLDraw:
+@@ -626,7 +629,7 @@ cdef class GLDraw:
                  return False
  
          # Pick a Render-to-texture method.
