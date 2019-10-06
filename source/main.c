@@ -71,7 +71,6 @@ void cleanup()
 int main(int argc, char* argv[])
 {
     setenv("MESA_NO_ERROR", "1", 1);
-    setenv("RENPY_LESS_MEMORY", "1", 1);
     romfsInit();
     socketInitializeDefault();
     nxlinkStdio();
