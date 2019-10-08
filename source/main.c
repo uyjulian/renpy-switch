@@ -3,6 +3,8 @@
 
 u32 __nx_applet_exit_mode = 1;
 
+PyMODINIT_FUNC init_libnx();
+
 PyMODINIT_FUNC initpygame_sdl2_color();
 PyMODINIT_FUNC initpygame_sdl2_controller();
 PyMODINIT_FUNC initpygame_sdl2_display();
@@ -71,6 +73,9 @@ void cleanup()
 int main(int argc, char* argv[])
 {
     setenv("MESA_NO_ERROR", "1", 1);
+#if 0
+    setenv("RENPY_LESS_MEMORY", "1", 1);
+#endif
     romfsInit();
     socketInitializeDefault();
     nxlinkStdio();
@@ -81,6 +86,8 @@ int main(int argc, char* argv[])
     Py_OptimizeFlag = 1;
 
     static struct _inittab builtins[] = {
+        {"_libnx", init_libnx},
+
         {"pygame_sdl2.event", initpygame_sdl2_event},
         {"pygame_sdl2.error", initpygame_sdl2_error},
         {"pygame_sdl2.color", initpygame_sdl2_color},

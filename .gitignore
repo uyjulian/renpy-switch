@@ -59,4 +59,5 @@ build/
 # Other files and folders related to Ren'Py for Nintendo Switch
 source/module/
 include/module/
+libnx_bindings/
 romfs/
