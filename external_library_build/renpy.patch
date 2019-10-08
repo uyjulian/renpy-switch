@@ -255,51 +255,54 @@ index 44d236630..8f5eeb4ef 100644
  
      def render(self, width, height, st, at):
 diff --git a/renpy/exports.py b/renpy/exports.py
-index bf41fc0ee..379d1614b 100644
+index bf41fc0ee..26013c228 100644
 --- a/renpy/exports.py
 +++ b/renpy/exports.py
-@@ -3802,3 +3802,42 @@ def is_init_phase():
+@@ -3802,3 +3802,45 @@ def is_init_phase():
      """
  
      return renpy.game.context().init_phase
 +
 +try:
 +    import libnx
++    libnx.pcvInitialize()
++    libnx.clkrstInitialize()
 +except:
-+    renpy.display.log.write("OOPS: libnx not initialized")
 +    pass
 +
-+idle_is_active = False
++overclock_is_enable = False
++clkrstSession = None
 +
 +def switch_overclock_system(enable=False):
++    global overclock_is_enable, clkrstSession
 +    if 'libnx' not in sys.modules:
 +        return
++    if overclock_is_enable is not enable:
++        overclock_is_enable = enable
++    else:
++        return
++    if clkrstSession is None:
++        clkrstSession = libnx.ClkrstSession()
 +
 +    cpu_speed = 1020000000
 +    mem_speed = 1331000000
 +    if enable is True:
 +        cpu_speed = 1785000000
 +        mem_speed = 1600000000
-+        renpy.display.log.write("Overclock enabled!")
-+    else:
-+        renpy.display.log.write("Overclock disabled!")
 +
 +    if libnx.hosversionBefore(8, 0, 0):
 +        libnx.pcvSetClockRate(libnx.PcvModule_CpuBus, cpu_speed)
 +        libnx.pcvSetClockRate(libnx.PcvModule_EMC, mem_speed)
 +    else:
-+        clkrstSession = libnx.new_ClkrstSession()
-+        clkrstOpenSession(clkrstSession, PcvModuleId_CpuBus, 3);
-+        clkrstSetClockRate(clkrstSession, cpu_speed);
-+        clkrstCloseSession(clkrstSession);
-+        clkrstOpenSession(clkrstSession, PcvModuleId_EMC, 3);
-+        clkrstSetClockRate(clkrstSession, mem_speed);
-+        clkrstCloseSession(clkrstSession);
-+        delete_ClkrstSession(clkrstSession)
++        libnx.clkrstOpenSession(clkrstSession, libnx.PcvModuleId_CpuBus, 3);
++        libnx.clkrstSetClockRate(clkrstSession, cpu_speed);
++        libnx.clkrstCloseSession(clkrstSession);
++        libnx.clkrstOpenSession(clkrstSession, libnx.PcvModuleId_EMC, 3);
++        libnx.clkrstSetClockRate(clkrstSession, mem_speed);
++        libnx.clkrstCloseSession(clkrstSession);
 +
 +def switch_overclock_system_idle(enable=False):
-+    idle_is_active = enable
-+    switch_overclock_system(idle_is_active)
++    switch_overclock_system(enable)
 +
 diff --git a/renpy/gl/gldraw.pyx b/renpy/gl/gldraw.pyx
 index 864b2ab27..527447395 100644
