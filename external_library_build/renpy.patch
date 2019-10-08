@@ -114,7 +114,7 @@ index 2c016c874..0dc16f3cd 100644
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
 diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
-index 8afc163b4..7bc2c9342 100644
+index 8afc163b4..54c86cf50 100644
 --- a/renpy/bootstrap.py
 +++ b/renpy/bootstrap.py
 @@ -234,7 +234,10 @@ def bootstrap(renpy_base):
@@ -138,7 +138,15 @@ index 8afc163b4..7bc2c9342 100644
          import renpy.display.presplash  # @Reimport
          renpy.display.presplash.start(basedir, gamedir)
  
-@@ -307,6 +310,8 @@ You may be using a system install of python. Please run {0}.sh,
+@@ -299,6 +302,7 @@ You may be using a system install of python. Please run {0}.sh,
+             exit_status = 1
+ 
+             try:
++                renpy.exports.switch_overclock_system(True)
+                 renpy.game.args = args
+                 renpy.config.renpy_base = renpy_base
+                 renpy.config.basedir = basedir
+@@ -307,6 +311,8 @@ You may be using a system install of python. Please run {0}.sh,
  
                  if renpy.android:
                      renpy.config.logdir = os.environ['ANDROID_PUBLIC']
@@ -147,7 +155,7 @@ index 8afc163b4..7bc2c9342 100644
                  else:
                      renpy.config.logdir = basedir
  
-@@ -359,5 +364,5 @@ You may be using a system install of python. Please run {0}.sh,
+@@ -359,5 +365,5 @@ You may be using a system install of python. Please run {0}.sh,
  
          # Prevent subprocess from throwing errors while trying to run it's
          # __del__ method during shutdown.
@@ -155,7 +163,7 @@ index 8afc163b4..7bc2c9342 100644
 +        if not (renpy.emscripten or renpy.switch):
              subprocess.Popen.__del__ = popen_del
 diff --git a/renpy/display/core.py b/renpy/display/core.py
-index f72ecbbca..b20f73aa9 100644
+index f72ecbbca..4486f03f4 100644
 --- a/renpy/display/core.py
 +++ b/renpy/display/core.py
 @@ -1829,6 +1829,7 @@ class Interface(object):
@@ -166,6 +174,15 @@ index f72ecbbca..b20f73aa9 100644
  
          # Needed for Unity.
          wmclass = renpy.config.save_directory or os.path.basename(sys.argv[0])
+@@ -2767,6 +2768,8 @@ class Interface(object):
+         else:
+             renpy.plog(1, "start idle_frame (inexpensive)")
+ 
++        renpy.exports.switch_overclock_system_idle(expensive)
++
+         # We want this to include the GC time, so we don't predict on
+         # frames where we GC.
+         start = get_time()
 diff --git a/renpy/display/im.py b/renpy/display/im.py
 index 576323000..0cf8dbf2e 100644
 --- a/renpy/display/im.py
@@ -237,6 +254,53 @@ index 44d236630..8f5eeb4ef 100644
              raise Exception("Movie(channel='movie') doesn't work on mobile when config.hw_video is true. (Use a different channel argument.)")
  
      def render(self, width, height, st, at):
+diff --git a/renpy/exports.py b/renpy/exports.py
+index bf41fc0ee..379d1614b 100644
+--- a/renpy/exports.py
++++ b/renpy/exports.py
+@@ -3802,3 +3802,42 @@ def is_init_phase():
+     """
+ 
+     return renpy.game.context().init_phase
++
++try:
++    import libnx
++except:
++    renpy.display.log.write("OOPS: libnx not initialized")
++    pass
++
++idle_is_active = False
++
++def switch_overclock_system(enable=False):
++    if 'libnx' not in sys.modules:
++        return
++
++    cpu_speed = 1020000000
++    mem_speed = 1331000000
++    if enable is True:
++        cpu_speed = 1785000000
++        mem_speed = 1600000000
++        renpy.display.log.write("Overclock enabled!")
++    else:
++        renpy.display.log.write("Overclock disabled!")
++
++    if libnx.hosversionBefore(8, 0, 0):
++        libnx.pcvSetClockRate(libnx.PcvModule_CpuBus, cpu_speed)
++        libnx.pcvSetClockRate(libnx.PcvModule_EMC, mem_speed)
++    else:
++        clkrstSession = libnx.new_ClkrstSession()
++        clkrstOpenSession(clkrstSession, PcvModuleId_CpuBus, 3);
++        clkrstSetClockRate(clkrstSession, cpu_speed);
++        clkrstCloseSession(clkrstSession);
++        clkrstOpenSession(clkrstSession, PcvModuleId_EMC, 3);
++        clkrstSetClockRate(clkrstSession, mem_speed);
++        clkrstCloseSession(clkrstSession);
++        delete_ClkrstSession(clkrstSession)
++
++def switch_overclock_system_idle(enable=False):
++    idle_is_active = enable
++    switch_overclock_system(idle_is_active)
++
 diff --git a/renpy/gl/gldraw.pyx b/renpy/gl/gldraw.pyx
 index 864b2ab27..527447395 100644
 --- a/renpy/gl/gldraw.pyx
