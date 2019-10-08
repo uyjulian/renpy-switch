@@ -100,6 +100,7 @@ ln -sf $(realpath ../pygame_sdl2/src/pygame_sdl2/threads/__init__.py) romfs/Cont
 ln -sf $(realpath ../pygame_sdl2/src/pygame_sdl2/time.py) romfs/Contents/lib/python2.7/pygame_sdl2/time.py
 ln -sf $(realpath ../pygame_sdl2/src/pygame_sdl2/version.py) romfs/Contents/lib/python2.7/pygame_sdl2/version.py
 
+rm romfs/Contents/renpy
 ln -sf $(realpath ../renpy/renpy) romfs/Contents/renpy
 ln -sf $(realpath ../renpy/renpy.py) romfs/Contents/renpy.py
 
