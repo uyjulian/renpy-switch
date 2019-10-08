@@ -67,7 +67,7 @@ ln -sf $(realpath ../cpython_2/Lib/sre_parse.py) romfs/Contents/lib/python2.7/sr
 ln -sf $(realpath ../cpython_2/Lib/stat.py) romfs/Contents/lib/python2.7/stat.py
 ln -sf $(realpath ../cpython_2/Lib/string.py) romfs/Contents/lib/python2.7/string.py
 ln -sf $(realpath ../cpython_2/Lib/struct.py) romfs/Contents/lib/python2.7/struct.py
-ln -sf $(realpath ../cpython_2/Lib/subprocess.py) romfs/Contents/lib/python2.7/subprocess.py
+ln -sf $(realpath external_library_build/pystub/subprocess.py) romfs/Contents/lib/python2.7/subprocess.py
 ln -sf $(realpath ../cpython_2/Lib/sysconfig.py) romfs/Contents/lib/python2.7/sysconfig.py
 ln -sf $(realpath ../cpython_2/Lib/tarfile.py) romfs/Contents/lib/python2.7/tarfile.py
 ln -sf $(realpath ../cpython_2/Lib/tempfile.py) romfs/Contents/lib/python2.7/tempfile.py
