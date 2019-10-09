@@ -54,7 +54,7 @@ APP_TITLEID := 52656E2750794E58
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 
-CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
+CFLAGS	:=	-g -Wall -Ofast -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
 CFLAGS	+=	$(INCLUDE) -D__SWITCH__ `sdl2-config --cflags` `freetype-config --cflags` -DFRIBIDI_ENTRY="" -DHAVE_CONFIG_H=1
