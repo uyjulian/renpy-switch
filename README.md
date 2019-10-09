@@ -9,7 +9,7 @@ It is highly recommended that you use the following file formats:
 
 * WebP for image assets
 * Opus/WebM for audio assets
-* VP9/Opus/WebM for video assets
+* H.264/Opus/Matroska for video assets
 
 If these formats are not used, there is a possibility of the program working incorrectly.  
 Free tools such as FFmpeg, `cwebp`, and ImageMagick are available to convert file formats.  
