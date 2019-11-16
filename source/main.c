@@ -64,10 +64,17 @@ PyMODINIT_FUNC initrenpy_text_ftfont();
 PyMODINIT_FUNC initrenpy_text_textsupport();
 PyMODINIT_FUNC initrenpy_text_texwrap();
 
-void cleanup()
+void userAppInit()
 {
-    romfsExit();
+    romfsInit();
+    socketInitializeDefault();
+    nxlinkStdio();
+}
+
+void userAppExit()
+{
     socketExit();
+    romfsExit();
 }
 
 int main(int argc, char* argv[])
@@ -76,9 +83,6 @@ int main(int argc, char* argv[])
 #if 0
     setenv("RENPY_LESS_MEMORY", "1", 1);
 #endif
-    romfsInit();
-    socketInitializeDefault();
-    nxlinkStdio();
 
     Py_NoSiteFlag = 1;
     Py_IgnoreEnvironmentFlag = 1;
@@ -173,7 +177,6 @@ int main(int argc, char* argv[])
     }
 
     Py_InitializeEx(0);
-    Py_AtExit(cleanup);
 
     PyImport_ExtendInittab(builtins);
 
