@@ -115,7 +115,7 @@ index 2c016c874..9fe904b02 100644
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
 diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
-index 8afc163b4..54c86cf50 100644
+index 8afc163b4..3f625ee1d 100644
 --- a/renpy/bootstrap.py
 +++ b/renpy/bootstrap.py
 @@ -234,7 +234,10 @@ def bootstrap(renpy_base):
@@ -129,15 +129,6 @@ index 8afc163b4..54c86cf50 100644
 +            gamedir = basedir
  
      sys.path.insert(0, basedir)
- 
-@@ -268,7 +271,7 @@ You may be using a system install of python. Please run {0}.sh,
-         raise
- 
-     # If we're not given a command, show the presplash.
--    if args.command == "run" and not renpy.mobile:
-+    if args.command == "run" and ((not renpy.mobile) or renpy.switch):
-         import renpy.display.presplash  # @Reimport
-         renpy.display.presplash.start(basedir, gamedir)
  
 @@ -299,6 +302,7 @@ You may be using a system install of python. Please run {0}.sh,
              exit_status = 1
