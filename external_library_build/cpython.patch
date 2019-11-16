@@ -234,7 +234,7 @@ index 000cb36938..c710ba95ea 100644
      return py_getentropy(buffer, size, 0);
  #else
 diff --git a/Python/thread_pthread.h b/Python/thread_pthread.h
-index 6d4b3b389f..3f75349275 100644
+index 4d792a123a..da973d7322 100644
 --- a/Python/thread_pthread.h
 +++ b/Python/thread_pthread.h
 @@ -264,7 +264,11 @@ PyThread_get_thread_ident(void)
@@ -258,7 +258,7 @@ index 6d4b3b389f..3f75349275 100644
  
  #ifdef USE_SEMAPHORES
 diff --git a/configure b/configure
-index 67300fe2b6..7970bd9a4a 100755
+index 63d675312d..4ca558e3a6 100755
 --- a/configure
 +++ b/configure
 @@ -3287,6 +3287,9 @@ then
