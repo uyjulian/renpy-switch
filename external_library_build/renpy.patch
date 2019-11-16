@@ -88,7 +88,7 @@ index 0c7e53012..33a5eeee8 100644
          rv = "~/.renpy/" + save_directory
          return os.path.expanduser(rv)
 diff --git a/renpy/__init__.py b/renpy/__init__.py
-index 2c016c874..0dc16f3cd 100644
+index 2c016c874..9fe904b02 100644
 --- a/renpy/__init__.py
 +++ b/renpy/__init__.py
 @@ -71,6 +71,7 @@ linux = False
@@ -99,13 +99,14 @@ index 2c016c874..0dc16f3cd 100644
  
  # Should we enable experimental features and debugging?
  experimental = "RENPY_EXPERIMENTAL" in os.environ
-@@ -125,10 +126,11 @@ elif "ANDROID_PRIVATE" in os.environ:
+@@ -124,11 +125,13 @@ elif "ANDROID_PRIVATE" in os.environ:
+     android = True
  elif sys.platform == 'emscripten' or "RENPY_EMSCRIPTEN" in os.environ:
      emscripten = True
- else:
--    linux = True
-+    # linux = True
++elif sys.platform == 'horizon':
 +    switch = True
+ else:
+     linux = True
  
  # A flag that's true if we're on a smartphone or tablet-like platform.
 -mobile = android or ios or emscripten
