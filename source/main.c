@@ -77,6 +77,9 @@ void userAppExit()
     romfsExit();
 }
 
+void __nx_win_init() {}
+void __nx_win_exit() {}
+
 int main(int argc, char* argv[])
 {
     setenv("MESA_NO_ERROR", "1", 1);
