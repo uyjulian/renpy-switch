@@ -1,70 +1,50 @@
 diff --git a/Lib/posixpath.py b/Lib/posixpath.py
-index bbc2369ce7..bd592d06a2 100644
+index bbc2369ce7..dc19e24773 100644
 --- a/Lib/posixpath.py
 +++ b/Lib/posixpath.py
-@@ -51,7 +51,7 @@ def normcase(s):
+@@ -51,6 +51,9 @@ def normcase(s):
  
  def isabs(s):
      """Test whether a path is absolute"""
--    return s.startswith('/')
-+    return s.startswith('/') or s.startswith('sdmc:') or s.startswith('romfs:') or s.startswith('nxlink:')
++    if sys.platform == 'horizon':
++        i = s.find('/', 0)
++        return (i != -1 and i != 0) and s[i - 1] == ':'
+     return s.startswith('/')
  
  
- # Join pathnames.
-@@ -65,7 +65,7 @@ def join(a, *p):
-     ends with a separator."""
-     path = a
-     for b in p:
--        if b.startswith('/'):
-+        if b.startswith('/') or b.startswith('sdmc:') or b.startswith('romfs:') or b.startswith('nxlink:'):
-             path = b
-         elif path == '' or path.endswith('/'):
+@@ -71,6 +74,10 @@ def join(a, *p):
              path +=  b
-@@ -277,7 +277,7 @@ def expanduser(path):
-             return path
-         userhome = pwent.pw_dir
-     userhome = userhome.rstrip('/')
--    return (userhome + path[i:]) or '/'
-+    return (userhome + path[i:]) or 'sdmc:/'
+         else:
+             path += '/' + b
++        if sys.platform == 'horizon':
++            i = b.find('/', 0)
++            if (i != -1 and i != 0) and b[i - 1] == ':':
++                path = b
+     return path
  
  
- # Expand paths containing shell variable substitutions.
-@@ -340,11 +340,6 @@ def normpath(path):
-     if path == '':
-         return dot
-     initial_slashes = path.startswith('/')
--    # POSIX allows one or two initial slashes, but treats three or more
--    # as single slash.
--    if (initial_slashes and
--        path.startswith('//') and not path.startswith('///')):
--        initial_slashes = 2
-     comps = path.split('/')
-     new_comps = []
-     for comp in comps:
-@@ -358,7 +353,7 @@ def normpath(path):
+@@ -358,7 +365,10 @@ def normpath(path):
      comps = new_comps
      path = slash.join(comps)
      if initial_slashes:
 -        path = slash*initial_slashes + path
-+        path = 'sdmc:/' + path
++        if sys.platform == 'horizon':
++            path = 'sdmc:/' + path
++        else:
++            path = slash*initial_slashes + path
      return path or dot
  
  
-@@ -386,8 +381,18 @@ symbolic links encountered in the path."""
+@@ -386,8 +396,13 @@ symbolic links encountered in the path."""
  # encountered in the second path.
  def _joinrealpath(path, rest, seen):
      if isabs(rest):
 -        rest = rest[1:]
 -        path = sep
-+        if rest.startswith('sdmc:/'):
-+            rest = rest[6:]
-+            path = 'sdmc:/'
-+        elif rest.startswith('romfs:/'):
-+            rest = rest[7:]
-+            path = 'romfs:/'
-+        elif rest.startswith('nxlink:/'):
-+            rest = rest[8:]
-+            path = 'nxlink:/'
++        i = rest.find('/', 0)
++        if (sys.platform == 'horizon') and (i != -1 and i != 0) and rest[i - 1] == ':':
++            rest = rest[i + 1:]
++            path = path[:i + 1]
 +        else:
 +            rest = rest[1:]
 +            path = sep
