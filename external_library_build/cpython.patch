@@ -1,5 +1,5 @@
 diff --git a/Lib/posixpath.py b/Lib/posixpath.py
-index bbc2369ce7..dc19e24773 100644
+index bbc2369ce7..b66f013d02 100644
 --- a/Lib/posixpath.py
 +++ b/Lib/posixpath.py
 @@ -51,6 +51,9 @@ def normcase(s):
@@ -43,8 +43,8 @@ index bbc2369ce7..dc19e24773 100644
 -        path = sep
 +        i = rest.find('/', 0)
 +        if (sys.platform == 'horizon') and (i != -1 and i != 0) and rest[i - 1] == ':':
++            path = rest[:i + 1]
 +            rest = rest[i + 1:]
-+            path = path[:i + 1]
 +        else:
 +            rest = rest[1:]
 +            path = sep
