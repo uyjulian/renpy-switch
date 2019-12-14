@@ -70,14 +70,12 @@ ln -sf $(realpath ../renpy/module/gen-static/renpy.gl.glenviron_shader.c) source
 ln -sf $(realpath ../renpy/module/gen-static/renpy.gl.glrtt_copy.c) source/module/renpy.gl.glrtt_copy.c
 ln -sf $(realpath ../renpy/module/gen-static/renpy.gl.glrtt_fbo.c) source/module/renpy.gl.glrtt_fbo.c
 ln -sf $(realpath ../renpy/module/gen-static/renpy.gl.gltexture.c) source/module/renpy.gl.gltexture.c
-# ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2draw.c) source/module/renpy.gl2.gl2draw.c
-# ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2environ_shader.c) source/module/renpy.gl2.gl2environ_shader.c
-# ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2geometry.c) source/module/renpy.gl2.gl2geometry.c
-# ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2rtt_fbo.c) source/module/renpy.gl2.gl2rtt_fbo.c
-# ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2shader.c) source/module/renpy.gl2.gl2shader.c
-# ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2texture.c) source/module/renpy.gl2.gl2texture.c
-# ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.uguu.c) source/module/renpy.gl2.uguu.c
-# ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.uguugl.c) source/module/renpy.gl2.uguugl.c
+ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2draw.c) source/module/renpy.gl2.gl2draw.c
+ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2geometry.c) source/module/renpy.gl2.gl2geometry.c
+ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2shader.c) source/module/renpy.gl2.gl2shader.c
+ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.gl2texture.c) source/module/renpy.gl2.gl2texture.c
+ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.uguu.c) source/module/renpy.gl2.uguu.c
+ln -sf $(realpath ../renpy/module/gen-static/renpy.gl2.uguugl.c) source/module/renpy.gl2.uguugl.c
 ln -sf $(realpath ../renpy/module/gen-static/renpy.parsersupport.c) source/module/renpy.parsersupport.c
 ln -sf $(realpath ../renpy/module/gen-static/renpy.pydict.c) source/module/renpy.pydict.c
 ln -sf $(realpath ../renpy/module/gen-static/renpy.style.c) source/module/renpy.style.c
