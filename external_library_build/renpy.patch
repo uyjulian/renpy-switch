@@ -47,20 +47,26 @@ index 300c325aa..253204538 100644
  
  void media_advance_time(void) {
 diff --git a/module/glcompat.h b/module/glcompat.h
-index b88f09f00..674b4c0e3 100644
+index b88f09f00..457f68f51 100644
 --- a/module/glcompat.h
 +++ b/module/glcompat.h
-@@ -37,6 +37,10 @@
+@@ -132,7 +132,16 @@ typedef GLfloat GLdouble;
  
-     #define RENPY_GLES_2
+ #if defined RENPY_OPENGL
  
-+#elif defined __SWITCH__
-+
-+    #define RENPY_GLES_2
-+
- #else
++#ifdef __SWITCH__
++#include <EGL/egl.h>
++#include "glad/glad.h"
++#define glewInit() (!!gladLoadGLLoader((GLADloadproc)eglGetProcAddress) || 1)
++#define GLEW_OK (1)
++#define glewGetErrorString(x) ("Unknown Error")
++#define glewIsSupported(x) (1)
++#else
+ #include <GL/glew.h>
++#endif
  
- 	#define RENPY_OPENGL
+ #define RENPY_THIRD_TEXTURE 1
+ 
 diff --git a/renpy.py b/renpy.py
 index 0c7e53012..33a5eeee8 100644
 --- a/renpy.py
@@ -88,7 +94,7 @@ index 0c7e53012..33a5eeee8 100644
          rv = "~/.renpy/" + save_directory
          return os.path.expanduser(rv)
 diff --git a/renpy/__init__.py b/renpy/__init__.py
-index 2c016c874..9fe904b02 100644
+index de5524508..e8ff53123 100644
 --- a/renpy/__init__.py
 +++ b/renpy/__init__.py
 @@ -71,6 +71,7 @@ linux = False
@@ -239,20 +245,26 @@ index bf41fc0ee..26013c228 100644
 +    switch_overclock_system(enable)
 +
 diff --git a/renpy/gl/gldraw.pyx b/renpy/gl/gldraw.pyx
-index 864b2ab27..527447395 100644
+index 864b2ab27..4928f81ea 100644
 --- a/renpy/gl/gldraw.pyx
 +++ b/renpy/gl/gldraw.pyx
-@@ -522,6 +522,9 @@ cdef class GLDraw:
-             # WebGL is GLES
-             gltexture.use_gles()
+@@ -321,6 +321,15 @@ cdef class GLDraw:
+             pwidth = 0
+             pheight = 0
  
 +        elif renpy.switch:
-+            gltexture.use_gles()
++            opengl = pygame.OPENGL
++            resizable = pygame.RESIZABLE
++
++            pygame.display.hint("SDL_OPENGL_ES_DRIVER", "0")
++            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MAJOR_VERSION, 1);
++            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3);
++            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_COMPATIBILITY)
 +
          else:
-             gltexture.use_gl()
+             opengl = pygame.OPENGL
  
-@@ -567,7 +570,7 @@ cdef class GLDraw:
+@@ -567,7 +576,7 @@ cdef class GLDraw:
  
          # Pick a texture environment subsystem.
  
@@ -261,7 +273,7 @@ index 864b2ab27..527447395 100644
              glenviron_shader,
              "RENPY_GL_ENVIRON",
              "shader",
-@@ -626,7 +629,7 @@ cdef class GLDraw:
+@@ -626,7 +635,7 @@ cdef class GLDraw:
                  return False
  
          # Pick a Render-to-texture method.
@@ -270,6 +282,31 @@ index 864b2ab27..527447395 100644
                  glrtt_fbo,
                  "RENPY_GL_RTT",
                  "fbo",
+diff --git a/renpy/gl2/gl2draw.pyx b/renpy/gl2/gl2draw.pyx
+index 3c70d5762..584b452f3 100644
+--- a/renpy/gl2/gl2draw.pyx
++++ b/renpy/gl2/gl2draw.pyx
+@@ -286,6 +286,9 @@ cdef class GL2Draw:
+             pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_ES)
+         else:
+             pygame.display.hint("SDL_OPENGL_ES_DRIVER", "0")
++            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MAJOR_VERSION, 1);
++            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 3);
++            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_COMPATIBILITY)
+ 
+     def set_mode(self, virtual_size, physical_size, fullscreen):
+         """
+@@ -352,6 +355,10 @@ cdef class GL2Draw:
+             pheight = 0
+             gles = True
+ 
++        elif renpy.switch:
++            window_flags |= pygame.RESIZABLE
++            gles = False
++
+         else:
+             if self.dpi_scale == 1.0:
+                 window_flags |= pygame.WINDOW_ALLOW_HIGHDPI
 diff --git a/renpy/persistent.py b/renpy/persistent.py
 index 244a0ba80..f966b4d22 100644
 --- a/renpy/persistent.py
