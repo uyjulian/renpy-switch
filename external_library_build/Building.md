@@ -21,8 +21,9 @@ Generate Cython C files for Pygame_SDL2 using the following command:
 ```
 PYGAME_SDL2_STATIC=1 python setup.py
 ```  
-## Ren'Py
+## Ren'Py 7.3.5.606
 Change directory to the Ren'Py repository.  
+Checkout version 7.3.5.606: `git checkout 7.3.5.606`  
 Apply the Ren'Py patch contained in `renpy.patch` using GNU patch.  
 Change directory to the `module` directory.  
 Generate Cython C files for Ren'Py modules using the following command:  
