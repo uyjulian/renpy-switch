@@ -195,17 +195,11 @@ typedef enum {
     PcvModuleId_EXTPERIPH2 = 0x40000057,
 } PcvModuleId;
 Result pcvSetClockRate(PcvModule module, u32 hz);
-typedef enum {
-    ServiceType_Uninitialized,
-    ServiceType_Normal,
-    ServiceType_Domain,
-    ServiceType_DomainSubservice,
-    ServiceType_Override,
-} ServiceType;
-typedef struct {
-    Handle handle;
+typedef struct Service {
+    Handle session;
+    u32 own_handle;
     u32 object_id;
-    ServiceType type;
+    u16 pointer_buffer_size;
 } Service;
 typedef struct {
     Service s;
