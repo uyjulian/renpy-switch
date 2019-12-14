@@ -64,7 +64,7 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lpython2.7 -lm -lnx -lz -lfreetype -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lSDL2_mixer -lSDL2 -lEGL -lGLESv2 -lglapi -ldrm_nouveau -lpng -ljpeg -lwebp -lswresample -lavformat -lavcodec -lavutil -lswscale -lavfilter -lopus -lvpx `sdl2-config --libs` `freetype-config --libs`
+LIBS	:= -lpython2.7 -lm -lnx -lz -lfreetype -lSDL2_gfx -lSDL2_image -lSDL2 -lEGL -lglapi -ldrm_nouveau -lpng -ljpeg -lwebp -lswresample -lavformat -lavcodec -lavutil -lswscale `sdl2-config --libs` `freetype-config --libs`
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
