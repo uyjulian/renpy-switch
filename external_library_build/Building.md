@@ -19,7 +19,7 @@ Run GNU Make with elevated privileges with `libinstall` as the target.
 Change directory to the Pygame_SDL2 repository.  
 Generate Cython C files for Pygame_SDL2 using the following command:  
 ```
-PYGAME_SDL2_STATIC=1 python setup.py
+PYGAME_SDL2_STATIC=1 python2 setup.py
 ```  
 ## Ren'Py 7.3.5.606
 Change directory to the Ren'Py repository.  
@@ -28,7 +28,7 @@ Apply the Ren'Py patch contained in `renpy.patch` using GNU patch.
 Change directory to the `module` directory.  
 Generate Cython C files for Ren'Py modules using the following command:  
 ```
-RENPY_DEPS_INSTALL=$PORTLIBS_PREFIX RENPY_STATIC=1 python setup.py
+RENPY_DEPS_INSTALL=$PORTLIBS_PREFIX RENPY_STATIC=1 python1 setup.py
 ```  
 ## Finalization
 Copy the `game` directory (you can use the_question or tutorial as a test) to either `./game` or `romfs:/Contents/game`.  
