@@ -171,6 +171,37 @@ index 61b8d612a4..ea18e5a2d6 100644
  #else /* !HAVE_TZNAME || __GLIBC__ || __CYGWIN__*/
  #ifdef HAVE_STRUCT_TM_TM_ZONE
      {
+diff --git a/Objects/obmalloc.c b/Objects/obmalloc.c
+index 2067cf54e7..2ed027b0ab 100644
+--- a/Objects/obmalloc.c
++++ b/Objects/obmalloc.c
+@@ -542,7 +542,12 @@ static struct arena_object* usable_arenas = NULL;
+  * 16 = can allocate 16 arenas = 16 * ARENA_SIZE = 4MB before growing the
+  * `arenas` vector.
+  */
++#ifdef __SWITCH__
++// 32MB of arena objects.
++#define INITIAL_ARENA_OBJECTS 4 * 32
++#else
+ #define INITIAL_ARENA_OBJECTS 16
++#endif
+ 
+ /* Number of arenas allocated that haven't been free()'d. */
+ static size_t narenas_currently_allocated = 0;
+@@ -622,8 +627,13 @@ new_arena(void)
+     address = mmap(NULL, ARENA_SIZE, PROT_READ|PROT_WRITE,
+                    MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+     err = (address == MAP_FAILED);
++#else
++#ifdef __SWITCH__
++    // Let's align to a page boundary.
++    address = valloc(ARENA_SIZE);
+ #else
+     address = malloc(ARENA_SIZE);
++#endif
+     err = (address == 0);
+ #endif
+     if (err) {
 diff --git a/Python/import.c b/Python/import.c
 index ccbd949e62..1fa46561c4 100644
 --- a/Python/import.c
