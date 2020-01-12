@@ -80,8 +80,12 @@ void userAppExit()
     romfsExit();
 }
 
-void __nx_win_init() {}
-void __nx_win_exit() {}
+void __nx_win_init(void) {}
+void __nx_win_exit(void) {}
+ConsoleRenderer* getDefaultConsoleRenderer(void)
+{
+    return NULL;
+}
 
 char relative_dir_path[0x400];
 char sysconfigdata_file_path[0x400];
