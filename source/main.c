@@ -2,6 +2,7 @@
 #include <Python.h>
 
 u32 __nx_applet_exit_mode = 1;
+extern u32 __nx_applet_type;
 
 PyMODINIT_FUNC init_libnx();
 
@@ -85,9 +86,10 @@ void __nx_win_exit() {}
 int main(int argc, char* argv[])
 {
     setenv("MESA_NO_ERROR", "1", 1);
-#if 0
-    setenv("RENPY_LESS_MEMORY", "1", 1);
-#endif
+    if (__nx_applet_type != AppletType_Application)
+    {
+        setenv("RENPY_LESS_MEMORY", "1", 1);
+    }
 
     Py_NoSiteFlag = 1;
     Py_IgnoreEnvironmentFlag = 1;
