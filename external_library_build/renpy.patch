@@ -115,7 +115,7 @@ index de5524508..e8ff53123 100644
  # A flag that's set to true if the game directory is bundled inside a mac app.
  macapp = False
 diff --git a/renpy/bootstrap.py b/renpy/bootstrap.py
-index 8afc163b4..3f625ee1d 100644
+index 8afc163b4..d433095cc 100644
 --- a/renpy/bootstrap.py
 +++ b/renpy/bootstrap.py
 @@ -234,7 +234,10 @@ def bootstrap(renpy_base):
@@ -147,8 +147,12 @@ index 8afc163b4..3f625ee1d 100644
                  else:
                      renpy.config.logdir = basedir
  
-@@ -359,5 +365,5 @@ You may be using a system install of python. Please run {0}.sh,
+@@ -357,7 +363,9 @@ You may be using a system install of python. Please run {0}.sh,
  
+         renpy.audio.audio.quit()
+ 
++        renpy.exports.switch_overclock_system(False)
++
          # Prevent subprocess from throwing errors while trying to run it's
          # __del__ method during shutdown.
 -        if not renpy.emscripten:
