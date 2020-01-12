@@ -108,4 +108,4 @@ ln -sf $(realpath ../renpy/renpy.py) romfs/Contents/renpy.py
 
 ln -sf $(realpath libnx_bindings/libnx.py) romfs/Contents/lib/python2.7/libnx.py
 
-find romfs -name \*.py -exec python -O -m py_compile {} \;
+find romfs -name \*.py -exec python2 -OO -m py_compile {} \;

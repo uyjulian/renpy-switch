@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
     Py_NoSiteFlag = 1;
     Py_IgnoreEnvironmentFlag = 1;
     Py_NoUserSiteDirectory = 1;
-    Py_OptimizeFlag = 1;
+    Py_OptimizeFlag = 2;
 
     static struct _inittab builtins[] = {
         {"_libnx", init_libnx},
