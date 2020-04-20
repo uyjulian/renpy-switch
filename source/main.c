@@ -93,12 +93,32 @@ char python_home_buffer[0x400];
 char python_snprintf_buffer[0x400];
 char python_script_buffer[0x400];
 
+void show_error_and_exit(const char* message)
+{
+    Py_Finalize();
+    char* first_line = (char*)message;
+    char* end = strchr(message, '\n');
+    if (end != NULL)
+    {
+        first_line = malloc(end - message + 1);
+        memcpy(first_line, message, end - message);
+        first_line[end - message] = '\0';
+    }
+    ErrorSystemConfig c;
+    errorSystemCreate(&c, (const char*)first_line, message);
+    errorSystemShow(&c);
+    Py_Exit(1);
+}
+
 int main(int argc, char* argv[])
 {
     setenv("MESA_NO_ERROR", "1", 1);
     if (__nx_applet_type != AppletType_Application)
     {
+        show_error_and_exit("Only application override is supported by this program.\n\nTo run this program as application override, hold down the R button while launching an application on the menu.");
+#if 0
         setenv("RENPY_LESS_MEMORY", "1", 1);
+#endif
     }
 
     Py_NoSiteFlag = 1;
@@ -174,20 +194,17 @@ int main(int argc, char* argv[])
 
     if (argc != 1)
     {
-        fprintf(stderr, "Only one argument (the program itself) should be passed to the program.\n");
-        Py_Exit(1);
+        show_error_and_exit("Only one argument (the program itself) should be passed to the program.\n\nPlease use hbmenu to run this program.");
     }
 
     if (strchr(argv[0], ' '))
     {
-        fprintf(stderr, "No spaces should be contained in the program path.\n");
-        Py_Exit(1);
+        show_error_and_exit("No spaces should be contained in the program path.\n\nPlease remove spaces from the program path.");
     }
 
     if (!strchr(argv[0], ':'))
     {
-        fprintf(stderr, "Program path does not appear to be an absolute path.\n");
-        Py_Exit(1);
+        show_error_and_exit("Program path does not appear to be an absolute path.\n\nPlease use hbmenu to run this program.");
     }
 
     char* last_dir_separator = strrchr(argv[0], '/');
@@ -241,14 +258,12 @@ int main(int argc, char* argv[])
 
     if (found_sysconfigdata == 0)
     {
-        fprintf(stderr, "Could not find lib/python2.7/_sysconfigdata.py.\n");
-        Py_Exit(1);
+        show_error_and_exit("Could not find lib/python2.7/_sysconfigdata.py.\n\nPlease ensure that you have extracted the files correctly so that the \"lib\" folder is in the same directory as the nro file.");
     }
 
     if (found_renpy == 0)
     {
-        fprintf(stderr, "Could not find renpy.py.\n");
-        Py_Exit(1);
+        show_error_and_exit("Could not find renpy.py.\n\nPlease ensure that you have extracted the files correctly so that the \"renpy.py\" file is in the same directory as the nro file.");
     }
 
     Py_InitializeEx(0);
@@ -268,37 +283,27 @@ int main(int argc, char* argv[])
 
     if (python_result == -1)
     {
-        fprintf(stderr, "Could not set the Python path.\n");
-        Py_Exit(1);
+        show_error_and_exit("Could not set the Python path.\n\nThis is an internal error and should not occur during normal usage.");
     }
 
-    char* py_libs[] = {
-        "os",
-        "pygame_sdl2",
-        "encodings",
-        NULL,
-    };
-
-    for (int i = 0; i < sizeof(py_libs); i += 1)
-    {
-        if (py_libs[i] == NULL)
-        {
-            break;
-        }
-        snprintf(python_snprintf_buffer, sizeof(python_snprintf_buffer), "import %s", py_libs[i]);
-        python_result = PyRun_SimpleString(python_snprintf_buffer);
-        if (python_result == -1)
-        {
-            fprintf(stderr, "Could not import python library %s.\n", py_libs[i]);
-            Py_Exit(1);
-        }
+#define x(lib) \
+    { \
+        if (PyRun_SimpleString("import " lib) == -1) \
+        { \
+            show_error_and_exit("Could not import python library " lib ".\n\nPlease ensure that you have extracted the files correctly so that the \"lib\" folder is in the same directory as the nro file, and that the \"lib\" folder contains the folder \"python2.7\". \nInside that folder, the file \"" lib ".py\" or folder \"" lib "\" needs to exist."); \
+        } \
     }
+
+    x("os");
+    x("pygame_sdl2");
+    x("encodings");
+
+#undef x
 
     FILE* renpy_file = fopen((const char*)python_script_buffer, "rb");
     if (renpy_file == NULL)
     {
-        fprintf(stderr, "Could not open renpy.py after Python initialization.\n");
-        Py_Exit(1);
+        show_error_and_exit("Could not open renpy.py after Python initialization.\n\nThis is an internal error and should not occur during normal usage.");
     }
     else
     {
@@ -307,8 +312,7 @@ int main(int argc, char* argv[])
 
     if (python_result == -1)
     {
-        fprintf(stderr, "An uncaught Python exception occurred during renpy.py execution.\n");
-        Py_Exit(1);
+        show_error_and_exit("An uncaught Python exception occurred during renpy.py execution.\n\nPlease look in the \"Ren'Py Logs\" folder on the SD card root for more information about this exception.");
     }
 
     Py_Exit(0);
