@@ -26,12 +26,6 @@ _sha shamodule.c
 _sha256 sha256module.c
 _sha512 sha512module.c
 
-# enable _struct and unicodedata, used by a Python script in 'make install' - or not
-#echo '_struct _struct.c
-#echo 'unicodedata unicodedata.c
-
-#echo 'strop stropmodule.c' >> Modules/Setup.local  # for platform module -> use sys.platform
-
 # Extra modules
 _bisect _bisectmodule.c	# Bisection algorithms
 _codecs _codecsmodule.c		# access to the builtin codecs and codec registry
@@ -45,10 +39,12 @@ _csv _csv.c
 _ctypes_test _ctypes/_ctypes_test.c
 _elementtree -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DUSE_PYEXPAT_CAPI _elementtree.c	# elementtree accelerator
 _heapq _heapqmodule.c		# Heapq type
+_hotshot _hotshot.c
 _json _json.c
 _locale _localemodule.c  # -lintl
 _lsprof _lsprof.c rotatingtree.c
 _multibytecodec cjkcodecs/multibytecodec.c
+_socket socketmodule.c timemodule.c -lm
 _sre _sre.c			# Fredrik Lundh's new regular expressions
 _symtable symtablemodule.c
 _testcapi _testcapimodule.c    # Python C API test module
@@ -59,6 +55,7 @@ cmath cmathmodule.c _math.c # -lm # complex math library functions
 errno errnomodule.c		# posix (UNIX) errno values
 fcntl fcntlmodule.c	# fcntl(2) and ioctl(2)
 future_builtins future_builtins.c
+imageop imageop.c
 parser parsermodule.c
 posix posixmodule.c		# posix (UNIX) system calls
 pyexpat expat/xmlparse.c expat/xmlrole.c expat/xmltok.c pyexpat.c -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DXML_POOR_ENTROPY=1 -DUSE_PYEXPAT_CAPI
@@ -69,33 +66,34 @@ xx xxmodule.c
 xxsubtype xxsubtype.c
 zipimport zipimport.c
 
+# The following will not build, but is specified in renpy-build:
+# _ctypes _ctypes/_ctypes.c _ctypes/callbacks.c _ctypes/callproc.c _ctypes/stgdict.c _ctypes/cfield.c -lffi
+# _hashlib _hashopenssl.c -lssl -lcrypto
+# _ssl _ssl.c -lssl -lcrypto
+# grp grpmodule.c
+# mmap mmapmodule.c
+# pwd pwdmodule.c
+# resource resource.c
+# select selectmodule.c
+# termios termios.c
+
 # The following will not build correctly:
 
 # _bsddb
-# _ctypes
 # _curses
 # _curses_panel
-# _hotshot
-# _socket
 # _sqlite3
-# _ssl
 # _tkinter
 # bsddb185
 # crypt
 # dbm
 # dl
 # gdbm
-# grp
-# imageop
 # linuxaudiodev
-# mmap
 # multiprocessing
 # nis
 # ossaudiodev
 # readline
-# resource
-# select
 # spwd
 # sunaudiodev
 # syslog
-# termios
