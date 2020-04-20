@@ -220,6 +220,21 @@ index 3c70d5762..43b2dceb9 100644
          else:
              if self.dpi_scale == 1.0:
                  window_flags |= pygame.WINDOW_ALLOW_HIGHDPI
+diff --git a/renpy/loadsave.py b/renpy/loadsave.py
+index 68e9074a8..6ce276ab0 100644
+--- a/renpy/loadsave.py
++++ b/renpy/loadsave.py
+@@ -563,7 +563,9 @@ def force_autosave(take_screenshot=False, block=False):
+ 
+     autosave_not_running.clear()
+ 
+-    if not renpy.emscripten:
++    if renpy.switch:
++        autosave_thread_function(take_screenshot)
++    elif not renpy.emscripten:
+         autosave_thread = threading.Thread(target=autosave_thread_function, args=(take_screenshot,))
+         autosave_thread.daemon = True
+         autosave_thread.start()
 diff --git a/renpy/persistent.py b/renpy/persistent.py
 index 244a0ba80..f966b4d22 100644
 --- a/renpy/persistent.py
