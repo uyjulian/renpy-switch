@@ -123,7 +123,7 @@ index 8afc163b4..cea7848e0 100644
 +        if not (renpy.emscripten or renpy.switch):
              subprocess.Popen.__del__ = popen_del
 diff --git a/renpy/display/core.py b/renpy/display/core.py
-index f72ecbbca..b20f73aa9 100644
+index f72ecbbca..4b2c55d5c 100644
 --- a/renpy/display/core.py
 +++ b/renpy/display/core.py
 @@ -1829,6 +1829,7 @@ class Interface(object):
@@ -134,6 +134,15 @@ index f72ecbbca..b20f73aa9 100644
  
          # Needed for Unity.
          wmclass = renpy.config.save_directory or os.path.basename(sys.argv[0])
+@@ -2126,7 +2127,7 @@ class Interface(object):
+         if not self.started:
+             return
+ 
+-        if background and not renpy.emscripten:
++        if background and not (renpy.emscripten or renpy.switch):
+             self.bgscreenshot_event.clear()
+             self.bgscreenshot_needed = True
+ 
 diff --git a/renpy/display/video.py b/renpy/display/video.py
 index 44d236630..8f5eeb4ef 100644
 --- a/renpy/display/video.py
