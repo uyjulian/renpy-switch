@@ -231,7 +231,7 @@ int main(int argc, char* argv[])
         {
             break;
         }
-        snprintf(sysconfigdata_file_path, sizeof(sysconfigdata_file_path), "%slib/python2.7/_sysconfigdata.py", dir_paths[i]);
+        snprintf(sysconfigdata_file_path, sizeof(sysconfigdata_file_path), "%slib.zip", dir_paths[i]);
         FILE* sysconfigdata_file = fopen((const char*)sysconfigdata_file_path, "rb");
         if (sysconfigdata_file != NULL)
         {
@@ -249,8 +249,8 @@ int main(int argc, char* argv[])
 
         if (found_sysconfigdata == 1 && found_renpy == 1)
         {
-            snprintf(python_home_buffer, sizeof(python_home_buffer), "%slib/python2.7", dir_paths[i]);
-            snprintf(python_snprintf_buffer, sizeof(python_snprintf_buffer), "import sys\nsys.path = ['%slib/python2.7']", dir_paths[i]);
+            snprintf(python_home_buffer, sizeof(python_home_buffer), "%slib.zip", dir_paths[i]);
+            snprintf(python_snprintf_buffer, sizeof(python_snprintf_buffer), "import sys\nsys.path = ['%slib.zip']", dir_paths[i]);
             Py_SetPythonHome(python_home_buffer);
             break;
         }
@@ -258,7 +258,7 @@ int main(int argc, char* argv[])
 
     if (found_sysconfigdata == 0)
     {
-        show_error_and_exit("Could not find lib/python2.7/_sysconfigdata.py.\n\nPlease ensure that you have extracted the files correctly so that the \"lib\" folder is in the same directory as the nro file.");
+        show_error_and_exit("Could not find lib.zip.\n\nPlease ensure that you have extracted the files correctly so that the \"lib.zip\" file is in the same directory as the nro file.");
     }
 
     if (found_renpy == 0)
