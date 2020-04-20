@@ -38,7 +38,7 @@ PyMODINIT_FUNC initrenpy_gl_glenviron_shader();
 PyMODINIT_FUNC initrenpy_gl_glrtt_copy();
 PyMODINIT_FUNC initrenpy_gl_glrtt_fbo();
 PyMODINIT_FUNC initrenpy_gl_gltexture();
-#if 1
+#if 0
 PyMODINIT_FUNC initrenpy_gl2_gl2draw();
 PyMODINIT_FUNC initrenpy_gl2_gl2environ_shader();
 PyMODINIT_FUNC initrenpy_gl2_gl2geometry();
@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
         {"renpy.gl.glrtt_copy", initrenpy_gl_glrtt_copy},
         {"renpy.gl.glrtt_fbo", initrenpy_gl_glrtt_fbo},
         {"renpy.gl.gltexture", initrenpy_gl_gltexture},
-#if 1
+#if 0
         {"renpy.gl2.gl2draw", initrenpy_gl2_gl2draw},
         {"renpy.gl2.gl2geometry", initrenpy_gl2_gl2geometry},
         {"renpy.gl2.gl2shader", initrenpy_gl2_gl2shader},
