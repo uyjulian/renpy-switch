@@ -2,9 +2,9 @@
 This process will be streamlined at a later date.  
 ## First steps
 Load the Switch environment variables into the shell using the following command: `source $DEVKITPRO/switchvars.sh`  
-## CPython 2.7.17
-Change directory to the CPython 2.7.17 source directory.  
-Apply the CPython 2.7.17 patch contained in `cpython.patch` using GNU patch.  
+## CPython 2.7.18
+Change directory to the CPython 2.7.18 source directory.  
+Apply the CPython 2.7.18 patch contained in `cpython.patch` using GNU patch.  
 Create the build directory.  
 Change directory to the build directory.  
 Copy the `config.site` file contained in the `cpython_config_files` directory to the build directory.  
