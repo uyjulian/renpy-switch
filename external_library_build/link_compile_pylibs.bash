@@ -12,17 +12,15 @@ rm -r $LIB_BUILD_DIR/lib2to3/tests
 rm $LIB_BUILD_DIR/subprocess.py
 ln -sf $(realpath external_library_build/pystub/subprocess.py) $LIB_BUILD_DIR/subprocess.py
 ln -sf $(realpath libnx_bindings/libnx.py) $LIB_BUILD_DIR/libnx.py
-find $LIB_BUILD_DIR -type l -not -name \*.py -delete
-find $LIB_BUILD_DIR -type d -empty -delete
-find $LIB_BUILD_DIR -name \*.py -exec python2 -OO -m py_compile {} \;
 pushd $LIB_BUILD_DIR
+find . -type l -not -name \*.py -delete
+find . -type d -empty -delete
+find . -name \*.py -exec python2 -OO -m py_compile {} \;
 7z a -l ../lib.zip .
 popd
 ln -sf $(realpath ../lib.zip) romfs/Contents/lib.zip
 
-rm -f romfs/Contents/renpy
 rm -rf romfs/Contents/renpy
 mkdir -p romfs/Contents/renpy
 ln -sf $(realpath ../renpy/renpy/common) romfs/Contents/renpy/common
 ln -sf $(realpath ../renpy/renpy.py) romfs/Contents/renpy.py
-
