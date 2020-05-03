@@ -213,6 +213,10 @@ int main(int argc, char* argv[])
         memcpy(relative_dir_path, argv[0], dirpath_size);
         relative_dir_path[dirpath_size] = '\000';
     }
+    else
+    {
+        getcwd(relative_dir_path, sizeof(relative_dir_path));
+    }
 
     char* dir_paths[] = {
         "romfs:/Contents/",
@@ -229,7 +233,7 @@ int main(int argc, char* argv[])
         {
             break;
         }
-        snprintf(sysconfigdata_file_path, sizeof(sysconfigdata_file_path), "%slib.zip", dir_paths[i]);
+        snprintf(sysconfigdata_file_path, sizeof(sysconfigdata_file_path), "%s/lib.zip", dir_paths[i]);
         FILE* sysconfigdata_file = fopen((const char*)sysconfigdata_file_path, "rb");
         if (sysconfigdata_file != NULL)
         {
@@ -237,7 +241,7 @@ int main(int argc, char* argv[])
             fclose(sysconfigdata_file);
         }
 
-        snprintf(python_script_buffer, sizeof(python_script_buffer), "%srenpy.py", dir_paths[i]);
+        snprintf(python_script_buffer, sizeof(python_script_buffer), "%s/renpy.py", dir_paths[i]);
         FILE* renpy_file = fopen((const char*)python_script_buffer, "rb");
         if (renpy_file != NULL)
         {
@@ -247,8 +251,8 @@ int main(int argc, char* argv[])
 
         if (found_sysconfigdata == 1 && found_renpy == 1)
         {
-            snprintf(python_home_buffer, sizeof(python_home_buffer), "%slib.zip", dir_paths[i]);
-            snprintf(python_snprintf_buffer, sizeof(python_snprintf_buffer), "import sys\nsys.path = ['%slib.zip']", dir_paths[i]);
+            snprintf(python_home_buffer, sizeof(python_home_buffer), "%s/lib.zip", dir_paths[i]);
+            snprintf(python_snprintf_buffer, sizeof(python_snprintf_buffer), "import sys\nsys.path = ['%s/lib.zip']", dir_paths[i]);
             Py_SetPythonHome(python_home_buffer);
             break;
         }
