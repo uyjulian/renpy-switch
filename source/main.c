@@ -80,8 +80,6 @@ void userAppExit()
     romfsExit();
 }
 
-void __nx_win_init(void) {}
-void __nx_win_exit(void) {}
 ConsoleRenderer* getDefaultConsoleRenderer(void)
 {
     return NULL;
