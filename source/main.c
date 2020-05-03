@@ -219,7 +219,7 @@ int main(int argc, char* argv[])
     }
 
     char* dir_paths[] = {
-        "romfs:/Contents/",
+        "romfs:/Contents",
         relative_dir_path,
         NULL,
     };
