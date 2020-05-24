@@ -36,3 +36,4 @@ RENPY_DEPS_INSTALL=$PORTLIBS_PREFIX RENPY_STATIC=1 python2 setup.py
 Copy the `game` directory (you can use the_question or tutorial as a test) to either `./game` or `romfs:/Contents/game`.  
 Use `external_library_build/link_sources.bash` to link the Pygame_SDL2 and Ren'Py module source files to the correct place.  
 Use `external_library_build/link_compile_pylibs.bash` to link and compile the Python, Pygame_SDL2 and Ren'Py module source files to the correct place.  
+Use `external_library_build/generate_libnx_bindings.bash` to generate bindings for libnx using SWIG and link them to the correct place.  
