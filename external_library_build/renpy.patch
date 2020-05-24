@@ -157,10 +157,10 @@ index 44d236630..8f5eeb4ef 100644
  
      def render(self, width, height, st, at):
 diff --git a/renpy/gl/gldraw.pyx b/renpy/gl/gldraw.pyx
-index 864b2ab27..5ecff513d 100644
+index 864b2ab27..111ab59c7 100644
 --- a/renpy/gl/gldraw.pyx
 +++ b/renpy/gl/gldraw.pyx
-@@ -321,6 +321,15 @@ cdef class GLDraw:
+@@ -321,6 +321,18 @@ cdef class GLDraw:
              pwidth = 0
              pheight = 0
  
@@ -173,10 +173,13 @@ index 864b2ab27..5ecff513d 100644
 +            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_MINOR_VERSION, 0);
 +            pygame.display.gl_set_attribute(pygame.GL_CONTEXT_PROFILE_MASK, pygame.GL_CONTEXT_PROFILE_ES)
 +
++            pwidth = 1920
++            pheight = 1080
++
          else:
              opengl = pygame.OPENGL
  
-@@ -522,6 +531,9 @@ cdef class GLDraw:
+@@ -522,6 +534,9 @@ cdef class GLDraw:
              # WebGL is GLES
              gltexture.use_gles()
  
@@ -186,7 +189,7 @@ index 864b2ab27..5ecff513d 100644
          else:
              gltexture.use_gl()
  
-@@ -567,7 +579,7 @@ cdef class GLDraw:
+@@ -567,7 +582,7 @@ cdef class GLDraw:
  
          # Pick a texture environment subsystem.
  
@@ -195,7 +198,7 @@ index 864b2ab27..5ecff513d 100644
              glenviron_shader,
              "RENPY_GL_ENVIRON",
              "shader",
-@@ -626,7 +638,7 @@ cdef class GLDraw:
+@@ -626,7 +641,7 @@ cdef class GLDraw:
                  return False
  
          # Pick a Render-to-texture method.
