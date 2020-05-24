@@ -21,17 +21,11 @@ cat libnx_bindings/libnx_pp.c | \
 	perl -l -p -e 's/^typedef unsigned int wchar_t;\z$n//mg' | \
 	perl -l -p -e 's/__inline/inline/mg' | \
 	perl -l -p -e 's/^extern struct in_addr __nxlink_host;\z$n//mg' | \
-	perl -l -p -e 's/^Result fsldrSetCurrentProcess\(void\);\z$n//mg' | \
-	perl -l -p -e 's/^Result ldrShellFlushArguments\(void\);\z$n//mg' | \
-	perl -l -p -e 's/^Result ldrDmntFlushArguments\(void\);\z$n//mg' | \
-	perl -l -p -e 's/^Service\* splFsGetServiceSession\(void\);\z$n//mg' | \
-	perl -l -p -e 's/^Service\* splSslGetServiceSession\(void\);\z$n//mg' | \
-	perl -l -p -e 's/^Service\* splManuGetServiceSession\(void\);\z$n//mg' | \
-	perl -l -p -e 's/^Service\* splCryptoGetServiceSession\(void\);\z$n//mg' | \
-	perl -l -p -e 's/^Service\* splEsGetServiceSession\(void\);\z$n//mg' | \
-	perl -l -p -e 's/^NWindow\* nwindowGetDefault\(void\);\z$n//mg' | \
 	perl -0 -l -p -e 's/ static inline uint32_t $n__crc32.*?$n\{$n(.*)$n\}$n//smg' | \
 	perl -0 -l -p -e 's/static inline u32 crc32.*? \{$n(.*)$n\}$n//smg' | \
+	perl -0 -l -p -e 's/ static inline int32_t $n__jcvt.*?$n\{$n(.*?)$n\}$n//smg' | \
+	perl -0 -l -p -e 's/ static inline float $n__rint.*?$n\{$n(.*?)$n\}$n//smg' | \
+	perl -0 -l -p -e 's/ static inline double $n__rint.*?$n\{$n(.*?)$n\}$n//smg' | \
 	perl -0 -l -p -e 's/int pselect \(.*?\)$n *?;$n//smg' > libnx_bindings/libnx_pp15.c
 
 printf '%%module libnx\n%%{\n#include <switch.h>\n%%}\n' > libnx_bindings/libnx_header_swig.c
