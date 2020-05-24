@@ -30,9 +30,9 @@ cat libnx_bindings/libnx_pp.c | \
 	perl -l -p -e 's/^Service\* splCryptoGetServiceSession\(void\);\z$n//mg' | \
 	perl -l -p -e 's/^Service\* splEsGetServiceSession\(void\);\z$n//mg' | \
 	perl -l -p -e 's/^NWindow\* nwindowGetDefault\(void\);\z$n//mg' | \
-	perl -0 -l -p -e 's/ static inline uint32_t $n__crc32.*$n\{$n(.*)$n\}$n//smg' | \
-	perl -0 -l -p -e 's/static inline u32 crc32.* \{$n(.*)$n\}$n//smg' | \
-	perl -0 -l -p -e 's/int pselect \(.*\)$n *;$n//smg' > libnx_bindings/libnx_pp15.c
+	perl -0 -l -p -e 's/ static inline uint32_t $n__crc32.*?$n\{$n(.*)$n\}$n//smg' | \
+	perl -0 -l -p -e 's/static inline u32 crc32.*? \{$n(.*)$n\}$n//smg' | \
+	perl -0 -l -p -e 's/int pselect \(.*?\)$n *?;$n//smg' > libnx_bindings/libnx_pp15.c
 
 printf '%%module libnx\n%%{\n#include <switch.h>\n%%}\n' > libnx_bindings/libnx_header_swig.c
 
