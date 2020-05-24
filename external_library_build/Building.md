@@ -14,7 +14,9 @@ Configure the CPython 2.x tree in a separate build directory using the following
 ```  
 Copy the `Setup.local` file contained in the `cpython_config_files` directory to the `Modules` subdirectory of the build directory.  
 Run GNU Make 3.81 with `libpython2.7.a` as the target.  
+Copy `libpython2.7.a` to `$PORTLIBS_PREFIX/lib/libpython2.7.a`.  
 Run GNU Make 3.81 with elevated privileges with `libinstall` as the target.  
+Run GNU Make 3.81 with elevated privileges with `inclinstall` as the target.  
 ## Pygame_SDL2
 Change directory to the Pygame_SDL2 repository.  
 Generate Cython C files for Pygame_SDL2 using the following command:  
