@@ -64,6 +64,19 @@ index bbc9222129..43f3ff45e7 100644
  				# if $HOME is not set
  _sre _sre.c			# Fredrik Lundh's new regular expressions
  _codecs _codecsmodule.c		# access to the builtin codecs and codec registry
+diff --git a/Modules/_hotshot.c b/Modules/_hotshot.c
+index 4fc5cee479..57573a2588 100644
+--- a/Modules/_hotshot.c
++++ b/Modules/_hotshot.c
+@@ -934,7 +934,7 @@ calibrate(void)
+ #endif
+     }
+ #if defined(MS_WINDOWS) || defined(PYOS_OS2) || \
+-    defined(__VMS) || defined (__QNX__)
++    defined(__VMS) || defined (__QNX__) || defined(__SWITCH__)
+     rusage_diff = -1;
+ #else
+     {
 diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
 index 7a1a6945c1..0c0688976d 100644
 --- a/Modules/posixmodule.c
@@ -190,7 +203,7 @@ index 2067cf54e7..4c48c76881 100644
  #endif
      if (err) {
 diff --git a/Python/import.c b/Python/import.c
-index ccbd949e62..1fa46561c4 100644
+index b79354b37a..f963275a59 100644
 --- a/Python/import.c
 +++ b/Python/import.c
 @@ -1402,6 +1402,13 @@ find_module(char *fullname, char *subname, PyObject *path, char *buf,
