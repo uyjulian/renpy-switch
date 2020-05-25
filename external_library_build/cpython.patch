@@ -184,24 +184,6 @@ index 61b8d612a4..ea18e5a2d6 100644
  #else /* !HAVE_TZNAME || __GLIBC__ || __CYGWIN__*/
  #ifdef HAVE_STRUCT_TM_TM_ZONE
      {
-diff --git a/Objects/obmalloc.c b/Objects/obmalloc.c
-index 2067cf54e7..4c48c76881 100644
---- a/Objects/obmalloc.c
-+++ b/Objects/obmalloc.c
-@@ -622,8 +622,13 @@ new_arena(void)
-     address = mmap(NULL, ARENA_SIZE, PROT_READ|PROT_WRITE,
-                    MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-     err = (address == MAP_FAILED);
-+#else
-+#ifdef __SWITCH__
-+    // Let's align to a page boundary.
-+    address = valloc(ARENA_SIZE);
- #else
-     address = malloc(ARENA_SIZE);
-+#endif
-     err = (address == 0);
- #endif
-     if (err) {
 diff --git a/Python/import.c b/Python/import.c
 index b79354b37a..f963275a59 100644
 --- a/Python/import.c
