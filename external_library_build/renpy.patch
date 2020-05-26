@@ -123,14 +123,14 @@ index 8afc163b4..cea7848e0 100644
 +        if not (renpy.emscripten or renpy.switch):
              subprocess.Popen.__del__ = popen_del
 diff --git a/renpy/display/core.py b/renpy/display/core.py
-index f72ecbbca..4b2c55d5c 100644
+index f72ecbbca..e64e410cc 100644
 --- a/renpy/display/core.py
 +++ b/renpy/display/core.py
 @@ -1829,6 +1829,7 @@ class Interface(object):
          """
  
          pygame.display.hint("SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS", "0")
-+        pygame.display.hint("SDL_HINT_TOUCH_MOUSE_EVENTS", "1")
++        pygame.display.hint("SDL_TOUCH_MOUSE_EVENTS", "1")
  
          # Needed for Unity.
          wmclass = renpy.config.save_directory or os.path.basename(sys.argv[0])
