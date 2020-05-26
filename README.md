@@ -1,10 +1,12 @@
 # Ren'Py for Nintendo Switch
 This repository contains a port of [Ren'Py](https://www.renpy.org/) to the Nintendo Switch.  
+The repository is located at the following URL: https://github.com/uyjulian/renpy-switch  
 Ren'Py is a visual novel engine that is written using [Python](https://www.python.org/).  
 Discussion of this project is on the [Lemma Soft Forums](https://lemmasoft.renai.us/forums/viewtopic.php?f=32&t=55503).  
 
 ## Building
 Please view the `external_library_build/Building.md` file for instructions on building this project, including the additional third party dependencies.  
+Once the steps in the aforementioned file are completed, run `make` to build the project.  
 
 ## File Formats
 It is highly recommended that you use the following file formats:  
@@ -20,14 +22,16 @@ Free tools such as [FFmpeg](http://ffmpeg.org/), [cwebp](https://developers.goog
 The file format can be changed without changing the file extension, so no script (`rpy` file) changes are needed.  
 The file `example.png` can be in the WebP file format without changing the filename to `example.webp`.  
 
-## RomFS Integration
-To integrate the game into one single `nro` file, place game files in a folder named `romfs`, and build as described in the "Building" section.  
-NOTE: If you do not compile the `py` and `rpy` files to `pyo` and `rpyc` respectively by running the game at least once on a read-write file system, the loading time required until the title screen is seen will be increased.  
-The `py_compile` module can be used to compile `py` files to `pyo`.  
-Example usage of this module:  
-```bash
-find . -name \*.py -exec python -O -m py_compile {} \;
-```
+## RomFS Integration (from source)
+To integrate the game into one single `nro` file, place game files in a folder named `Contents` in the directory `romfs` (see section File system layout), and build as described in the "Building" section.  
+NOTE: If you do not compile the `py` and `rpy` files to `pyo` and `rpyc` respectively by running the game at least once (using either this port or upstream Ren'Py) on a read-write file system, the loading time required until the title screen is seen will be increased.  
+
+## RomFS Integration (from SDK archive)
+To integrate the game into one single `nro` file, follow these steps:
+1. Place game files in a folder named `Contents` in the folder named `romfs` (see section File system layout).
+2. Install package `switch-tools` from devkitPro pacman (follow the installation instructions [here](https://devkitpro.org/wiki/Getting_Started) if you have not already)
+3. Generate `control.nacp`: `nacptool --create TITLE AUTHOR VERSION control.nacp`
+4. Package everything into an `nro` file: `elf2nro renpy-switch.elf OUTPUT.NRO --romfsdir=romfs --nacp=control.nacp --icon=LOGO.JPG`
 
 ## File system layout
 The following files or folders are required to be in the same directory as the `.nro` or in RomFS:  
@@ -128,4 +132,4 @@ The following native Python modules are available in Ren'Py for Nintendo Switch:
 * `zlib`
 
 ## License
-This project is licensed under the MIT license. Please read the `LICENSE` file for more information.
+This project is licensed under the MIT license. Please read the `LICENSE` file for more information.  
