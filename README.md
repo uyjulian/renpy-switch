@@ -30,8 +30,9 @@ NOTE: If you do not compile the `py` and `rpy` files to `pyo` and `rpyc` respect
 To integrate the game into one single `nro` file, follow these steps:
 1. Place game files in a folder named `Contents` in the folder named `romfs` (see section File system layout).
 2. Install package `switch-tools` from devkitPro pacman (follow the installation instructions [here](https://devkitpro.org/wiki/Getting_Started) if you have not already)
-3. Generate `control.nacp`: `nacptool --create TITLE AUTHOR VERSION control.nacp`
-4. Package everything into an `nro` file: `elf2nro renpy-switch.elf OUTPUT.NRO --romfsdir=romfs --nacp=control.nacp --icon=LOGO.JPG`
+3. Add the tools to your PATH: `export PATH=${DEVKITPRO}/tools/bin:$PATH`
+4. Generate `control.nacp`: `nacptool --create TITLE AUTHOR VERSION control.nacp`
+5. Package everything into an `nro` file: `elf2nro renpy-switch.elf OUTPUT.NRO --romfsdir=romfs --nacp=control.nacp --icon=LOGO.JPG`
 
 ## File system layout
 The following files or folders are required to be in the same directory as the `.nro` or in RomFS:  
