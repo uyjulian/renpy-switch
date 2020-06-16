@@ -1,5 +1,6 @@
 # Ren'Py for Nintendo Switch
-This repository contains a port of [Ren'Py](https://www.renpy.org/) to the Nintendo Switch.  
+This is a port of [Ren'Py](https://www.renpy.org/), a visual novel game engine, to the Nintendo Switch for **homebrew** purposes.  
+If you are looking for a **commercial port** for publishing to the Nintendo eShop, contact [Ratalaika Games](http://www.ratalaikagames.com/).  
 The repository is located at the following URL: https://github.com/uyjulian/renpy-switch  
 Ren'Py is a visual novel engine that is written using [Python](https://www.python.org/).  
 Discussion of this project is on the [Lemma Soft Forums](https://lemmasoft.renai.us/forums/viewtopic.php?f=32&t=55503).  
