@@ -17,7 +17,7 @@ The following steps can be used to find the source file name, line, and function
 1. In the generated crash report file, find the line(s) that contains `renpy-switch +`
 2. Open GDB with the elf file by running the following: `aarch64-none-elf-gdb /path/to/renpy-switch.elf`
 3. Make a note of the address such as `0x99aabbcc` (indicated by the number after the string(s) found in step 1)
-4. Enter the following in the GDB console: `info addr *0x99aabbcc` (where `0x99aabbcc` is the address noted in step 3)
+4. Enter the following in the GDB console: `info line *0x99aabbcc` (where `0x99aabbcc` is the address noted in step 3)
 
 ## File Formats
 It is highly recommended that you use the following file formats:  
