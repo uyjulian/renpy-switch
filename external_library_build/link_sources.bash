@@ -9,7 +9,7 @@ ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.draw.c) source/module/py
 ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.error.c) source/module/pygame_sdl2.error.c
 ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.event.c) source/module/pygame_sdl2.event.c
 # ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.font.c) source/module/pygame_sdl2.font.c
-# ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.gfxdraw.c) source/module/pygame_sdl2.gfxdraw.c
+ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.gfxdraw.c) source/module/pygame_sdl2.gfxdraw.c
 ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.image.c) source/module/pygame_sdl2.image.c
 ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.joystick.c) source/module/pygame_sdl2.joystick.c
 ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.key.c) source/module/pygame_sdl2.key.c
@@ -26,8 +26,8 @@ ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.scrap.c) source/module/p
 ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.surface.c) source/module/pygame_sdl2.surface.c
 ln -sf $(realpath ../pygame_sdl2/gen-static/pygame_sdl2.transform.c) source/module/pygame_sdl2.transform.c
 # ln -sf $(realpath ../pygame_sdl2/sdl2.c) source/module/sdl2.c
-# ln -sf $(realpath ../pygame_sdl2/src/SDL2_rotozoom.c) source/module/SDL2_rotozoom.c
-# ln -sf $(realpath ../pygame_sdl2/src/SDL_gfxPrimitives.c) source/module/SDL_gfxPrimitives.c
+ln -sf $(realpath ../pygame_sdl2/src/SDL2_rotozoom.c) source/module/SDL2_rotozoom.c
+ln -sf $(realpath ../pygame_sdl2/src/SDL_gfxPrimitives.c) source/module/SDL_gfxPrimitives.c
 ln -sf $(realpath ../pygame_sdl2/src/alphablit.c) source/module/alphablit.c
 ln -sf $(realpath ../pygame_sdl2/src/write_jpeg.c) source/module/write_jpeg.c
 ln -sf $(realpath ../pygame_sdl2/src/write_png.c) source/module/write_png.c
