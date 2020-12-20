@@ -184,6 +184,47 @@ index 61b8d612a4..ea18e5a2d6 100644
  #else /* !HAVE_TZNAME || __GLIBC__ || __CYGWIN__*/
  #ifdef HAVE_STRUCT_TM_TM_ZONE
      {
+diff --git a/Objects/obmalloc.c b/Objects/obmalloc.c
+index 2067cf54e7..89c3f4d212 100644
+--- a/Objects/obmalloc.c
++++ b/Objects/obmalloc.c
+@@ -27,6 +27,10 @@
+  #endif
+ #endif
+ 
++#ifdef __SWITCH__
++#include <switch.h>
++#endif
++
+ #ifdef WITH_VALGRIND
+ #include <valgrind/valgrind.h>
+ 
+@@ -618,7 +622,13 @@ new_arena(void)
+     arenaobj = unused_arena_objects;
+     unused_arena_objects = arenaobj->nextarena;
+     assert(arenaobj->address == 0);
+-#ifdef ARENAS_USE_MMAP
++#ifdef __SWITCH__
++    virtmemLock();
++    address = virtmemFindAslr(ARENA_SIZE, 0x1000);
++    Result rc = svcMapPhysicalMemory(address, ARENA_SIZE);
++    virtmemUnlock();
++    err = R_FAILED(rc);
++#elif defined(ARENAS_USE_MMAP)
+     address = mmap(NULL, ARENA_SIZE, PROT_READ|PROT_WRITE,
+                    MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+     err = (address == MAP_FAILED);
+@@ -1104,7 +1114,9 @@ PyObject_Free(void *p)
+                 unused_arena_objects = ao;
+ 
+                 /* Free the entire arena. */
+-#ifdef ARENAS_USE_MMAP
++#ifdef __SWITCH__
++                svcUnmapPhysicalMemory((void *)ao->address, ARENA_SIZE);
++#elif defined(ARENAS_USE_MMAP)
+                 munmap((void *)ao->address, ARENA_SIZE);
+ #else
+                 free((void *)ao->address);
 diff --git a/Python/import.c b/Python/import.c
 index b79354b37a..f963275a59 100644
 --- a/Python/import.c
