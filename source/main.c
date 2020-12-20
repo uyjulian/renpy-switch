@@ -160,8 +160,10 @@ int main(int argc, char* argv[])
     setenv("MESA_NO_ERROR", "1", 1);
     if (__nx_applet_type != AppletType_Application)
     {
-        show_error_and_exit("Only application override is supported by this program.\n\nTo run this program as application override, hold down the R button while launching an application on the menu.");
 #if 0
+        show_error_and_exit("Only application override is supported by this program.\n\nTo run this program as application override, hold down the R button while launching an application on the menu.");
+#endif
+#if 1
         setenv("RENPY_LESS_MEMORY", "1", 1);
 #endif
     }
