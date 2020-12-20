@@ -3,6 +3,7 @@
 
 u32 __nx_applet_exit_mode = 1;
 extern u32 __nx_applet_type;
+extern size_t __nx_heap_size;
 
 PyMODINIT_FUNC init_libnx();
 
@@ -67,6 +68,51 @@ PyMODINIT_FUNC initrenpy_text_ftfont();
 PyMODINIT_FUNC initrenpy_text_textsupport();
 PyMODINIT_FUNC initrenpy_text_texwrap();
 
+// Overide the heap initialization function.
+void __libnx_initheap(void)
+{
+    void*  addr;
+    size_t size = 0;
+    size_t mem_available = 0, mem_used = 0;
+    const size_t max_mem = 0x18000000;
+
+    if (envHasHeapOverride()) {
+        addr = envGetHeapOverrideAddr();
+        size = envGetHeapOverrideSize();
+    }
+    else {
+        if (__nx_heap_size==0) {
+            svcGetInfo(&mem_available, InfoType_TotalMemorySize, CUR_PROCESS_HANDLE, 0);
+            svcGetInfo(&mem_used, InfoType_UsedMemorySize, CUR_PROCESS_HANDLE, 0);
+            if (mem_available > mem_used+0x200000)
+                size = (mem_available - mem_used - 0x200000) & ~0x1FFFFF;
+            if (size==0)
+                size = 0x2000000*16;
+        }
+        else {
+            size = __nx_heap_size;
+        }
+
+        // Limit heap memory to 384 MiB (to give room for VRAM and Python heap)
+        if (size > max_mem)
+        {
+            size = max_mem;
+        }
+
+        Result rc = svcSetHeapSize(&addr, size);
+
+        if (R_FAILED(rc))
+            diagAbortWithResult(MAKERESULT(Module_Libnx, LibnxError_HeapAllocFailed));
+    }
+
+    // References to the bump allocator in Newlib.
+    extern char* fake_heap_start;
+    extern char* fake_heap_end;
+
+    fake_heap_start = (char*)addr;
+    fake_heap_end   = (char*)addr + size;
+}
+
 void userAppInit()
 {
     romfsInit();
@@ -90,6 +136,7 @@ char sysconfigdata_file_path[0x400];
 char python_home_buffer[0x400];
 char python_snprintf_buffer[0x400];
 char python_script_buffer[0x400];
+char python_error_buffer[0x400];
 
 void show_error_and_exit(const char* message)
 {
@@ -98,8 +145,8 @@ void show_error_and_exit(const char* message)
     char* end = strchr(message, '\n');
     if (end != NULL)
     {
-        first_line = malloc(end - message + 1);
-        memcpy(first_line, message, end - message);
+        first_line = python_error_buffer;
+        memcpy(first_line, message, (end - message) > sizeof(python_error_buffer) ? sizeof(python_error_buffer) : (end - message));
         first_line[end - message] = '\0';
     }
     ErrorSystemConfig c;
