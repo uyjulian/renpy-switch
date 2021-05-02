@@ -5,7 +5,9 @@ u32 __nx_applet_exit_mode = 1;
 extern u32 __nx_applet_type;
 extern size_t __nx_heap_size;
 
+#if 0
 PyMODINIT_FUNC init_libnx();
+#endif
 
 PyMODINIT_FUNC initpygame_sdl2_color();
 PyMODINIT_FUNC initpygame_sdl2_controller();
@@ -183,7 +185,9 @@ int main(int argc, char* argv[])
     Py_OptimizeFlag = 2;
 
     static struct _inittab builtins[] = {
+#if 0
         {"_libnx", init_libnx},
+#endif
 
         {"pygame_sdl2.color", initpygame_sdl2_color},
         {"pygame_sdl2.controller", initpygame_sdl2_controller},
