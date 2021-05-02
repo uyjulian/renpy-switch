@@ -6,8 +6,24 @@ Ren'Py is a visual novel engine that is written using [Python](https://www.pytho
 Discussion of this project is on the [Lemma Soft Forums](https://lemmasoft.renai.us/forums/viewtopic.php?f=32&t=55503).  
 
 ## Building
-Please view the `external_library_build/Building.md` file for instructions on building this project, including the additional third party dependencies.  
-Once the steps in the aforementioned file are completed, run `make` to build the project.  
+Please view the `external_library_build/Building.md` file for instructions on building the additional third party dependencies.  
+Once the steps in the aforementioned file are completed, do the following steps:  
+Create the build directory.  
+```bash
+mkdir build
+```
+Change directory into the build directory.  
+```bash
+cd build
+```
+Run CMake.  
+```bash
+cmake ..
+```
+Build.  
+```bash
+cmake --build .
+```
 
 ## Debugging
 The log for Ren'Py is recorded in the `log.txt` in the `Ren'Py Logs` folder of the SD card root.  
