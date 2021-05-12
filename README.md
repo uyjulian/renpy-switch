@@ -6,24 +6,34 @@ Ren'Py is a visual novel engine that is written using [Python](https://www.pytho
 Discussion of this project is on the [Lemma Soft Forums](https://lemmasoft.renai.us/forums/viewtopic.php?f=32&t=55503).  
 
 ## Building
-Please view the `external_library_build/Building.md` file for instructions on building the additional third party dependencies.  
-Once the steps in the aforementioned file are completed, do the following steps:  
-Create the build directory.  
+These steps are to be done on a **clean** Ubuntu 18.04 based image.
+Some system files are modified during this process, which may be a security risk, so please perform these steps on a separate (virtual) machine.  
+Clone this repository.  
 ```bash
-mkdir build
+git clone https://github.com/uyjulian/renpy-switch.git
 ```
-Change directory into the build directory.  
+Chage directory to the repository directory.  
 ```bash
-cd build
+cd renpy-switch
 ```
-Run CMake.  
+Install prerequisites.  
 ```bash
-cmake ..
+sudo bash setup.bash
 ```
-Build.  
+Set up the docker environment.  
 ```bash
-cmake --build .
+sudo bash setup-docker.bash
 ```
+Prepare RomFS.  
+```bash
+bash prepare-romfs.bash
+```
+Configure and build.  
+```bash
+sudo bash build-switch-docker.bash
+```
+The resulting files are:  
+* `build-switch/renpy-switch.nro` - The main executable  
 
 ## Debugging
 The log for Ren'Py is recorded in the `log.txt` in the `Ren'Py Logs` folder of the SD card root.  

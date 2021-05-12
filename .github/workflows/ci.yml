@@ -1,0 +1,63 @@
+name: continuous integration
+
+on:
+  push:
+    paths:
+      - "**.patch"
+      - "**.txt"
+      - "**.bash"
+      - "**.c"
+      - "**.yml"
+  pull_request:
+    paths:
+      - "**.patch"
+      - "**.txt"
+      - "**.bash"
+      - "**.c"
+      - "**.yml"
+
+jobs:
+  build-artifact:
+    name: Build
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@master
+      with:
+        submodules: recursive
+    - name: setup environment
+      run: >-
+        sudo bash setup.bash
+    - name: setup docker
+      run: >-
+        sudo bash setup-docker.bash
+    - name: prepare romfs
+      run: >-
+        bash prepare-romfs.bash
+    - name: config and build
+      run: >-
+        sudo bash build-switch-docker.bash
+    - name: upload renpy-switch artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: renpy-switch-nro
+        path: build-switch/renpy-switch.nro
+
+  create-release:
+    needs: [build-artifact]
+    runs-on: ubuntu-20.04
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+    - name: Download renpy-switch-nro artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: renpy-switch-nro
+
+    - name: Create release
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: "${{ contains(github.ref, '-rc') }}"
+        files: |
+          renpy-switch-nro/*
